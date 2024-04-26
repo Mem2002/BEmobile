@@ -15,7 +15,7 @@ app.set("view engine", "ejs"); //khai báo view engine
 
 //khai báo route
 app.get("/", (req, res) => {
-  res.send("Hello World! vs Nam Anh");
+  res.send("Hello World! vs Nam Anh vs nodemon");
 });
 
 app.get("/abc", (req, res) => {
