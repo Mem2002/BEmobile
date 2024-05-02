@@ -1,17 +1,11 @@
 const express = require("express");
-
+const { getHomepage, getABC, getHoiDanIT } = require("../controllers/homeController");
 const router = express.Router();
+// router.Method('/route', handler)
 //khai báo route
-router.get("/", (req, res) => {
-  res.send("Hello World! vs Nam Anh vs nodemon");
-});
+router.get("/", getHomepage);
+//getHomepage() để ngoặc là thực thi hàm ngay tại đây
+router.get("/abc", getABC);// nhờ có việc khai báo hàm handler bên trong cái router này nên chúng ta có req và res truyền tử trên xuống dưới ở homeController
 
-router.get("/abc", (req, res) => {
-  res.send("1111111111 vs Nam Anh");
-});
-
-router.get("/hoidanit", (req, res) => {
-  // res.send("1111111111 vs Nam Anh");
-  res.render("sample.ejs"); // tạo ra 1 view động
-});
-module.exports = router //export default
+router.get("/hoidanit", getHoiDanIT);
+module.exports = router; //export default: chỉ xuất ra 1 biến thôi
