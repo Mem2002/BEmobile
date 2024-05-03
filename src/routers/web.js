@@ -1,5 +1,5 @@
 const express = require("express");
-const { getHomepage, getABC, getHoiDanIT } = require("../controllers/homeController");
+const { getHomepage, getABC, getHoiDanIT, postCreateUser } = require("../controllers/homeController");
 const router = express.Router();
 // router.Method('/route', handler)
 //khai báo route
@@ -8,4 +8,15 @@ router.get("/", getHomepage);
 router.get("/abc", getABC);// nhờ có việc khai báo hàm handler bên trong cái router này nên chúng ta có req và res truyền tử trên xuống dưới ở homeController
 
 router.get("/hoidanit", getHoiDanIT);
+
+// router.get('/create', getCreatePage);
+// router.get('/update/:id', getUpdatePage);
+
+router.post('/create-user', postCreateUser);
+
+// router.post('/update-user', postUpdateUser);
+
+// router.post('/create-user', postDeleteUser);
+// router.post('/create-user', postHandleRemoveUser);
+
 module.exports = router; //export default: chỉ xuất ra 1 biến thôi
