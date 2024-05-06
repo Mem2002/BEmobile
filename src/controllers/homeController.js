@@ -17,9 +17,30 @@ const getHoiDanIT = (req, res) => {
   // res.send("1111111111 vs Nam Anh");
   res.render("sample.ejs"); // tạo ra 1 view động
 };
-const postCreateUser = (req, res) => {
-  console.log(">>> req.body: ", req.body)
-  res.send("Create a new user");
+const postCreateUser = async (req, res) => {
+  // console.log(">>> req.body: ", req.body)
+  let email = req.body.email;
+  let name = req.body.name;
+  let city = req.body.city;
+  console.log(">>> email = ", email, 'name = ', name, 'city = ', city);
+  // c1
+  await User.create({
+    email: email,
+    name: name,
+    city: city
+  })
+// c2:
+  // await User.create({
+  //   email,
+  //   name,
+  //   city
+  // })
+
+   res.send("Create user succeed!");
+};
+
+const getCreatePage = (req, res) => {
+  res.render('create.ejs')
 };
 // const postCreateUser = async(req,res) =>{
 //   let email = req.body.email;
@@ -48,4 +69,5 @@ module.exports = {
   getABC,
   getHoiDanIT,
   postCreateUser,
+  getCreatePage
 };

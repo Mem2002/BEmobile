@@ -1,5 +1,5 @@
 const express = require("express");
-const { getHomepage, getABC, getHoiDanIT, postCreateUser } = require("../controllers/homeController");
+const { getHomepage, getABC, getHoiDanIT, postCreateUser, getCreatePage } = require("../controllers/homeController");
 const router = express.Router();
 // router.Method('/route', handler)
 //khai báo route
@@ -11,6 +11,7 @@ router.get("/hoidanit", getHoiDanIT);
 
 // router.get('/create', getCreatePage);
 // router.get('/update/:id', getUpdatePage);
+router.get("/create", getCreatePage);
 
 router.post('/create-user', postCreateUser);
 
