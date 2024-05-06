@@ -4,8 +4,9 @@ const User = require("../models/User");
 const getHomepage = async (req, res) => {
   // process data
   // call model
-  let results = [];
+  let results = await User.find({});
   // res.send('Hello world với Hoi Dan IT & Eric! & nodemon')
+  console.log("results", results)
   return res.render("home.ejs", { listUsers: results });
 };
 
@@ -22,25 +23,25 @@ const postCreateUser = async (req, res) => {
   let email = req.body.email;
   let name = req.body.name;
   let city = req.body.city;
-  console.log(">>> email = ", email, 'name = ', name, 'city = ', city);
+  console.log(">>> email = ", email, "name = ", name, "city = ", city);
   // c1
   await User.create({
     email: email,
     name: name,
-    city: city
-  })
-// c2:
+    city: city,
+  });
+  // c2:
   // await User.create({
   //   email,
   //   name,
   //   city
   // })
 
-   res.send("Create user succeed!");
+  res.send("Create user succeed!");
 };
 
 const getCreatePage = (req, res) => {
-  res.render('create.ejs')
+  res.render("create.ejs");
 };
 // const postCreateUser = async(req,res) =>{
 //   let email = req.body.email;
@@ -69,5 +70,5 @@ module.exports = {
   getABC,
   getHoiDanIT,
   postCreateUser,
-  getCreatePage
+  getCreatePage,
 };
