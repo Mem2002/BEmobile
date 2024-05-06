@@ -17,8 +17,9 @@ const getHoiDanIT = (req, res) => {
   // res.send("1111111111 vs Nam Anh");
   res.render("sample.ejs"); // tạo ra 1 view động
 };
-const postCreateUser = (req, res)=>{
-  res.send('Create a new user')
+const postCreateUser = (req, res) => {
+  console.log(">>> req.body: ", req.body)
+  res.send("Create a new user");
 };
 // const postCreateUser = async(req,res) =>{
 //   let email = req.body.email;
