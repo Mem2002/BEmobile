@@ -43,6 +43,17 @@ const postCreateUser = async (req, res) => {
 const getCreatePage = (req, res) => {
   res.render("create.ejs");
 };
+const getUpdatePage = (req, res) => {
+  const userId = req.params.id;
+  console.log(">>> req.params::", req.params, userId)
+  res.render("edit.ejs");
+};
+
+// const getUpdatePage = async(req, res) =>{
+//   const userId = req.params.id;
+//   let user = await getUserById(userId);
+//   res.render('edit.ejs', {userEdit: user});
+// }
 // const postCreateUser = async(req,res) =>{
 //   let email = req.body.email;
 //   let name = req.body.myname;
@@ -71,4 +82,5 @@ module.exports = {
   getHoiDanIT,
   postCreateUser,
   getCreatePage,
+  getUpdatePage,
 };

@@ -10,7 +10,7 @@ router.get("/abc", getABC);// nhờ có việc khai báo hàm handler bên trong
 router.get("/hoidanit", getHoiDanIT);
 
 // router.get('/create', getCreatePage);
-// router.get('/update/:id', getUpdatePage);
+router.get('/update/:id', getUpdatePage);
 router.get("/create", getCreatePage);
 
 router.post('/create-user', postCreateUser);

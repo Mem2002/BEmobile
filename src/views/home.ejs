@@ -54,7 +54,8 @@
             <td><%= listUsers[i].email %></td>
             <td><%= listUsers[i].city %></td>
             <td>
-              <button>Edit</button>
+              <a href="/update/<%= listUsers[i].id %>">Edit</a> 
+              <!-- thẻ a ứng với phương thức get -->
               <button>Delete</button>
             </td>
           </tr>
