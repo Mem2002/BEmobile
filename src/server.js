@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express"); //commonjs
 const configViewEngine = require("./config/viewEngine");
 const webRoutes = require("./routers/web");
+const apiRoutes = require("./routers/api");
 const connection = require("./config/database");
 
 
@@ -23,6 +24,8 @@ configViewEngine(app); // cấu hình file config
 
 //khai báo routes
 app.use("/", webRoutes); // dể / ở đây có nghĩa là để / trước /hoidanit //đây chính là router
+app.use("/v1/api", apiRoutes);
+
 
 // const cat = new Kitten({ name: "Hoi dan IT model" });
 // cat.save();
