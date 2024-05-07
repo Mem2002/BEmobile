@@ -88,8 +88,12 @@ const postDeleteUser = async (req, res) =>{
 res.render('delete.ejs', {userEdit: user})
 }
 
-const postHandleRemoveUser = (req, res) => {
-  res.send('Oke deleted!')
+const postHandleRemoveUser = async (req, res) => {
+  const id = req.body.userId;
+  await User.deleteOne({
+    _id: id
+  })
+  res.redirect('/');
 }
 module.exports = {
   //export ra nhiều biến(object)
