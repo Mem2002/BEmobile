@@ -62,24 +62,8 @@ const postUpdateUser = async(req,res) =>{
   let city = req.body.city;
   let userId = req.body.userId;
 
-  // console.log(">>> email = ", email, 'name = ', name, 'city = ', city)
-  console.log("")
   await User.updateOne({_id: userId}, {email: email, name: name, city: city});
   res.redirect('/');
-  // c1
-  // await User.create({
-  //   email: email,
-  //   name: name,
-  //   city: city,
-  //   userId: userId
-  // })
-  // c2:
-  //  await User.create({
-  //   email,
-  //   name,
-  //   city
-  // })
-  // res.send('Updated user succeed!')
 }
 const postDeleteUser = async (req, res) =>{
   const userId = req.params.id;
