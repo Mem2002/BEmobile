@@ -23,7 +23,7 @@ const postCreateUser = async (req, res) => {
   let email = req.body.email;
   let name = req.body.name;
   let city = req.body.city;
-  console.log(">>> email = ", email, "name = ", name, "city = ", city);
+  // console.log(">>> email = ", email, "name = ", name, "city = ", city);
   // c1
   await User.create({
     email: email,
@@ -43,10 +43,12 @@ const postCreateUser = async (req, res) => {
 const getCreatePage = (req, res) => {
   res.render("create.ejs");
 };
-const getUpdatePage = (req, res) => {
+const getUpdatePage = async (req, res) => {
   const userId = req.params.id;
-  console.log(">>> req.params::", req.params, userId)
-  res.render("edit.ejs");
+  // let user = await getUserById(userId);
+  let user = await User.findById(userId).exec();
+  // console.log(">>> req.params::", req.params, userId)
+  res.render("edit.ejs", {userEdit: user});
 };
 
 // const getUpdatePage = async(req, res) =>{
@@ -54,26 +56,31 @@ const getUpdatePage = (req, res) => {
 //   let user = await getUserById(userId);
 //   res.render('edit.ejs', {userEdit: user});
 // }
-// const postCreateUser = async(req,res) =>{
-//   let email = req.body.email;
-//   let name = req.body.myname;
-//   let city = req.body.city;
+const postUpdateUser = async(req,res) =>{
+  let email = req.body.email;
+  let name = req.body.name;
+  let city = req.body.city;
+  let userId = req.body.userId;
 
-//   console.log(">>> email = ", email, 'name = ', name, 'city = ', city)
-//   // c1
-//   await User.create({
-//     email: email,
-//     name: name,
-//     city: city
-//   })
-//   // c2:
-//   //  await User.create({
-//   //   email,
-//   //   name,
-//   //   city
-//   // })
-//   res.send('Created user succeed!')
-// }
+  // console.log(">>> email = ", email, 'name = ', name, 'city = ', city)
+  console.log("")
+  await User.updateOne({_id: userId}, {email: email, name: name, city: city});
+  res.redirect('/');
+  // c1
+  // await User.create({
+  //   email: email,
+  //   name: name,
+  //   city: city,
+  //   userId: userId
+  // })
+  // c2:
+  //  await User.create({
+  //   email,
+  //   name,
+  //   city
+  // })
+  // res.send('Updated user succeed!')
+}
 
 module.exports = {
   //export ra nhiều biến(object)
@@ -83,4 +90,5 @@ module.exports = {
   postCreateUser,
   getCreatePage,
   getUpdatePage,
+  postUpdateUser,
 };
