@@ -56,7 +56,10 @@
             <td>
               <a href="/update/<%= listUsers[i].id %>">Edit</a> 
               <!-- thẻ a ứng với phương thức get -->
-              <button>Delete</button>
+              <form action="/delete-user/<%= listUsers[i].id %>" method="POST">
+                <button>Delete</button>
+              </form>
+
             </td>
           </tr>
           <% } %>

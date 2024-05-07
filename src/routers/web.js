@@ -1,5 +1,5 @@
 const express = require("express");
-const { getHomepage, getABC, getHoiDanIT, postCreateUser, getCreatePage, getUpdatePage, postUpdateUser } = require("../controllers/homeController");
+const { getHomepage, getABC, getHoiDanIT, postCreateUser, getCreatePage, getUpdatePage, postUpdateUser, postDeleteUser, postHandleRemoveUser } = require("../controllers/homeController");
 const router = express.Router();
 // router.Method('/route', handler)
 //khai báo route
@@ -16,6 +16,8 @@ router.get("/create", getCreatePage);
 router.post('/create-user', postCreateUser);
 
 router.post('/update-user', postUpdateUser);
+router.post('/delete-user/:id', postDeleteUser);
+router.post('/delete-user', postHandleRemoveUser);
 
 // router.post('/create-user', postDeleteUser);
 // router.post('/create-user', postHandleRemoveUser);
