@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   //create  Schema mongooDB Kitty
   name: String,
   email: String,
-  city: String,
+  phone: String,
 });
 
 //create database

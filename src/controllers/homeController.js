@@ -22,13 +22,13 @@ const postCreateUser = async (req, res) => {
   // console.log(">>> req.body: ", req.body)
   let email = req.body.email;
   let name = req.body.name;
-  let city = req.body.city;
+  let phone = req.body.phone;
   // console.log(">>> email = ", email, "name = ", name, "city = ", city);
   // c1
   await User.create({
     email: email,
     name: name,
-    city: city,
+    phone: phone,
   });
   // c2:
   // await User.create({
@@ -59,10 +59,10 @@ const getUpdatePage = async (req, res) => {
 const postUpdateUser = async(req,res) =>{
   let email = req.body.email;
   let name = req.body.name;
-  let city = req.body.city;
+  let phone = req.body.phone;
   let userId = req.body.userId;
 
-  await User.updateOne({_id: userId}, {email: email, name: name, city: city});
+  await User.updateOne({_id: userId}, {email: email, name: name, phone: phone});
   res.redirect('/');
 }
 const postDeleteUser = async (req, res) =>{
