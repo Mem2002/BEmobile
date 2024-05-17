@@ -30,14 +30,23 @@ app.use("/v1/api", apiRoutes);
 // const cat = new Kitten({ name: "Hoi dan IT model" });
 // cat.save();
 
-(async () => {
-  //test connection
+// (async () => {
+//   //test connection
+//   try {
+//     await connection();
+//     app.listen(port, hostname, () => {
+//       console.log(`Backend zero app listening on port ${port}`);
+//     });
+//   } catch (error) {
+//     console.log(">>> Error connect to DB", error);
+//   }
+// })();
+
+app.listen(port, async () => {
   try {
     await connection();
-    app.listen(port, hostname, () => {
-      console.log(`Backend zero app listening on port ${port}`);
-    });
-  } catch (error) {
-    console.log(">>> Error connect to DB", error);
+    console.log(`App is running at ${port}`);
+  } catch (err) {
+    console.log(">>> Err when starting server: " + err);
   }
-})();
+});
