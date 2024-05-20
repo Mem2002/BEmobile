@@ -30,6 +30,8 @@ app.use("/v1/api", apiRoutes);
 // const cat = new Kitten({ name: "Hoi dan IT model" });
 // cat.save();
 
+//dùng cách này không đẩy lên clound được
+
 // (async () => {
 //   //test connection
 //   try {
@@ -47,6 +49,8 @@ app.listen(port, async () => {
     await connection();
     console.log(`App is running at ${port}`);
   } catch (err) {
+    console.log(">>> Error connect to DB", error);
     console.log(">>> Err when starting server: " + err);
+
   }
 });
