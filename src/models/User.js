@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 //shape data
 const userSchema = new mongoose.Schema({
-  //create  Schema mongooDB Kitty
+  //create  Schema mongooDB user
   name: String,
   email: String,
   phone: String,

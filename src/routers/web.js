@@ -1,4 +1,5 @@
 const express = require("express");
+const session = require("express-session");
 
 const {
   getHomepage,
@@ -11,13 +12,24 @@ const {
   postDeleteUser,
   postHandleRemoveUser,
   postlogin,
+  postregister,
+  getlogin,
   getregister,
-  getcookie,
-  getcookies,
-  delcookie
+  // getcookie,
+  // getcookies,
+  // delcookie
 } = require("../controllers/homeController");
-var cookieParser = require('cookie-parser')
+var cookieParser = require("cookie-parser");
 const router = express.Router();
+
+router.use(
+  session({
+    secret: "Key that will sign cookie",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
 router.use(cookieParser());
 // router.Method('/route', handler)
 //khai báo route
@@ -26,12 +38,14 @@ router.get("/", getHomepage);
 router.get("/abc", getABC); // nhờ có việc khai báo hàm handler bên trong cái router này nên chúng ta có req và res truyền tử trên xuống dưới ở homeController
 
 router.get("/hoidanit", getHoiDanIT);
-router.get("/login", postlogin);
+router.get("/login", getlogin);
 router.get("/register", getregister);
-router.get("/cookie/set", getcookies);
-router.get("/cookie/get", getcookie);
-// xóa cookie
-router.get("/cookie/del", delcookie);
+router.post("/login", postlogin);
+router.post("/register", postregister);
+// router.get("/cookie/set", getcookies);
+// router.get("/cookie/get", getcookie);
+// // xóa cookie
+// router.get("/cookie/del", delcookie);
 
 // router.get('/create', getCreatePage);
 router.get("/update/:id", getUpdatePage);

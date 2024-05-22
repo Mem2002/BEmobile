@@ -1,4 +1,18 @@
 const User = require("../models/User");
+const express = require("express");
+const session = require("express-session");
+const UserTestModels = require("../models/UserTest");
+const bcrypt = require('bcryptjs')
+
+const router = express.Router();
+
+router.use(
+  session({
+    secret: "Key that will sign cookie",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 //đây chính là controllerrrrrrrrrrrrr
 const getHomepage = async (req, res) => {
@@ -6,7 +20,10 @@ const getHomepage = async (req, res) => {
   // call model
   let results = await User.find({});
   // res.send('Hello world với Hoi Dan IT & Eric! & nodemon')
-  console.log("results", results);
+  // console.log("results", results);
+  // console.log(req.session);
+  // res.send("Hello Session tuf");
+  // req.session.isAuth = true;
   return res.render("home.ejs", { listUsers: results });
 };
 
@@ -18,37 +35,73 @@ const getHoiDanIT = (req, res) => {
   // res.send("1111111111 vs Nam Anh");
   res.render("sample.ejs"); // tạo ra 1 view động
 };
-const postlogin = (req, res) => {
+const getlogin = async (req, res) => {
   res.render("login.ejs"); // tạo ra 1 view động
 };
-const getregister = (req, res) => {
+const getregister = async (req, res) => {
   res.render("register.ejs"); // tạo ra 1 view động
 };
 
-const getcookie = (req, res) => {
-  const cookies = req.cookies;
-  res.send(cookies);
+const postlogin = async (req, res) => {
+  // res.render("login.ejs"); // tạo ra 1 view động
+  const {email, password} = req.body;
+  const user = await UserTestModels.findOne({email});
+
+  if(!user){
+    return res.redirect('/login');
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if(!isMatch){
+    return res.redirect('/login');
+  }
+
+  res.redirect("/");
+};
+const postregister = async (req, res) => {
+ const {username , email, password} = req.body;
+
+ let user = await UserTestModels.findOne({email});
+
+ if(user){
+  return res.redirect('/register');
+ }
+
+ const hashedPsw = await bcrypt.hash(password, 12);
+ user = new UserTestModels({
+  username,
+  email,
+  password: hashedPsw
+ });
+ await user.save();
+ res.redirect("/login");
 };
 
-const getcookies = (req, res) => {
-  res
-    .cookie("username", "tipsjavascript", {
-      // maxAge: 5*1000
-      httpOnly: true,
-    })
-    .cookie("blog", "http://anonsytick.com", {
-      httpOnly: true,
-      secure: true,
+// const getcookie = (req, res) => {
+//   const cookies = req.cookies;
+//   res.send(cookies);
+// };
 
-      //truyền tải 1 dao thức protocol http
-    });
-  res.send("SET COOKIES");
-};
+// const getcookies = (req, res) => {
+//   res
+//     .cookie("username", "tipsjavascript", {
+//       // maxAge: 5*1000
+//       httpOnly: true,
+//     })
+//     .cookie("blog", "http://anonsytick.com", {
+//       httpOnly: true,
+//       secure: true,
 
-const delcookie = (req, res) => {
-  res.clearCookie('blog')
-  res.send('DEL COOKIES')
-}
+//       //truyền tải 1 dao thức protocol http
+//     });
+//   res.send("SET COOKIES");
+// };
+
+// const delcookie = (req, res) => {
+//   res.clearCookie("blog");
+//   res.send("DEL COOKIES");
+// };
 
 const postCreateUser = async (req, res) => {
   // console.log(">>> req.body: ", req.body)
@@ -126,8 +179,10 @@ module.exports = {
   postDeleteUser,
   postHandleRemoveUser,
   postlogin,
+  postregister,
+  getlogin,
   getregister,
-  getcookie,
-  getcookies,
-  delcookie
+  // getcookie,
+  // getcookies,
+  // delcookie,
 };
