@@ -6,7 +6,7 @@ const getHomepage = async (req, res) => {
   // call model
   let results = await User.find({});
   // res.send('Hello world với Hoi Dan IT & Eric! & nodemon')
-  console.log("results", results)
+  console.log("results", results);
   return res.render("home.ejs", { listUsers: results });
 };
 
@@ -18,6 +18,38 @@ const getHoiDanIT = (req, res) => {
   // res.send("1111111111 vs Nam Anh");
   res.render("sample.ejs"); // tạo ra 1 view động
 };
+const postlogin = (req, res) => {
+  res.render("login.ejs"); // tạo ra 1 view động
+};
+const getregister = (req, res) => {
+  res.render("register.ejs"); // tạo ra 1 view động
+};
+
+const getcookie = (req, res) => {
+  const cookies = req.cookies;
+  res.send(cookies);
+};
+
+const getcookies = (req, res) => {
+  res
+    .cookie("username", "tipsjavascript", {
+      // maxAge: 5*1000
+      httpOnly: true,
+    })
+    .cookie("blog", "http://anonsytick.com", {
+      httpOnly: true,
+      secure: true,
+
+      //truyền tải 1 dao thức protocol http
+    });
+  res.send("SET COOKIES");
+};
+
+const delcookie = (req, res) => {
+  res.clearCookie('blog')
+  res.send('DEL COOKIES')
+}
+
 const postCreateUser = async (req, res) => {
   // console.log(">>> req.body: ", req.body)
   let email = req.body.email;
@@ -48,7 +80,7 @@ const getUpdatePage = async (req, res) => {
   // let user = await getUserById(userId);
   let user = await User.findById(userId).exec();
   // console.log(">>> req.params::", req.params, userId)
-  res.render("edit.ejs", {userEdit: user});
+  res.render("edit.ejs", { userEdit: user });
 };
 
 // const getUpdatePage = async(req, res) =>{
@@ -56,29 +88,32 @@ const getUpdatePage = async (req, res) => {
 //   let user = await getUserById(userId);
 //   res.render('edit.ejs', {userEdit: user});
 // }
-const postUpdateUser = async(req,res) =>{
+const postUpdateUser = async (req, res) => {
   let email = req.body.email;
   let name = req.body.name;
   let phone = req.body.phone;
   let userId = req.body.userId;
 
-  await User.updateOne({_id: userId}, {email: email, name: name, phone: phone});
-  res.redirect('/');
-}
-const postDeleteUser = async (req, res) =>{
+  await User.updateOne(
+    { _id: userId },
+    { email: email, name: name, phone: phone }
+  );
+  res.redirect("/");
+};
+const postDeleteUser = async (req, res) => {
   const userId = req.params.id;
   // let user = await getUserById(userId);
   let user = await User.findById(userId).exec();
-res.render('delete.ejs', {userEdit: user})
-}
+  res.render("delete.ejs", { userEdit: user });
+};
 
 const postHandleRemoveUser = async (req, res) => {
   const id = req.body.userId;
   await User.deleteOne({
-    _id: id
-  })
-  res.redirect('/');
-}
+    _id: id,
+  });
+  res.redirect("/");
+};
 module.exports = {
   //export ra nhiều biến(object)
   getHomepage,
@@ -90,4 +125,9 @@ module.exports = {
   postUpdateUser,
   postDeleteUser,
   postHandleRemoveUser,
+  postlogin,
+  getregister,
+  getcookie,
+  getcookies,
+  delcookie
 };

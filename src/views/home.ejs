@@ -41,7 +41,7 @@
       
       <table>
         <tr>
-          <th>ID</th>
+          <th class="d-none">ID</th>
           <th>Name</th>
           <th>Email</th>
           <th>Phone</th>
@@ -53,11 +53,12 @@
           %>
           
           <tr>
-            <td><%= listUsers[i].id %></td>
+            <td class="d-none"><%= listUsers[i].id %></td>
             <td><%= listUsers[i].name %></td>
             <td><%= listUsers[i].email %></td>
             <td><%= listUsers[i].phone %></td>
             <td style="margin: 100px;">
+              
               <a href="/update/<%= listUsers[i].id %>"><button type="button" class="btn btn-info">Edit</button></a> 
               <!-- thẻ a ứng với phương thức get -->
               <form action="/delete-user/<%= listUsers[i].id %>" method="POST">
