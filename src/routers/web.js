@@ -2,7 +2,8 @@ const express = require("express");
 const session = require("express-session");
 
 const {
-  getHomepage,
+  getHomePage,
+  getListUser,
   getABC,
   getHoiDanIT,
   postCreateUser,
@@ -30,10 +31,24 @@ router.use(
   })
 );
 
-router.use(cookieParser());
-// router.Method('/route', handler)
+const isAuth = (req, res, next) => {
+  if (req.session.isAuth) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+};
+// router.use(cookieParser());
+// // router.Method('/route', handler)
+// app.use(session({
+//   secret: 'your_secret_key', // Khóa bí mật dùng để ký session ID cookie
+//   resave: false, // Không lưu session nếu không có sự thay đổi
+//   saveUninitialized: true, // Lưu session mới ngay cả khi chưa có dữ liệu
+// }));
+
 //khai báo route
-router.get("/", getHomepage);
+router.get("/", getHomePage);
+router.get("/listUser", isAuth, getListUser);
 //getHomepage() để ngoặc là thực thi hàm ngay tại đây
 router.get("/abc", getABC); // nhờ có việc khai báo hàm handler bên trong cái router này nên chúng ta có req và res truyền tử trên xuống dưới ở homeController
 

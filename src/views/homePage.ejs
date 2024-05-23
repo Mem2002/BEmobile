@@ -1,0 +1,55 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Document</title>
+    <style>
+        .hoidanit {
+            width: 100%; /* Hoặc bạn có thể sử dụng kích thước cụ thể như 500px, 50%, v.v. */
+            height: 93%; /* Giữ tỉ lệ khung hình */
+            background-repeat: no-repeat;
+            background-attachment: fixed;  
+            background-size: cover;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+        }
+
+        .overlay-text {
+            position: absolute;
+            top: 15%; /* Đặt văn bản ở giữa hình ảnh */
+            right: 5%;
+            transform: translate(-50%, -50%); /* Dịch chuyển văn bản để căn giữa */
+            color: white; /* Màu chữ */
+            font-size: 5em; /* Kích thước chữ */
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Đổ bóng để chữ dễ đọc hơn trên hình nền */
+        }
+        li {
+            display: inline;
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: flex-end; /* Căn chỉnh các mục danh sách sang phải */
+            background-color: rgb(203 213 225) ;
+        }
+        ul li a.active {
+            background-color: #4CAF50; /* Màu nền khi nhấp vào */
+        }
+    </style>
+</head>
+<body>
+    <ul style="right: 50%;">
+        <li><a href="/login">Login</a></li>
+      </ul>
+    <div>
+        <img class="hoidanit" src="/images/time.jpg" alt="">
+        <div class="overlay-text">Admin Page</div>
+    </div>
+</body>
+</html>

@@ -1,30 +1,66 @@
 const User = require("../models/User");
 const express = require("express");
-const session = require("express-session");
 const UserTestModels = require("../models/UserTest");
-const bcrypt = require('bcryptjs')
-
+const bcrypt = require("bcryptjs");
+const session = require('express-session');
+const mongoose = require("mongoose")
+const MongoDBSession = require('connect-mongodb-session')(session);
 const router = express.Router();
+
+
+// const mongoURI = 'mongodb+srv://namanh030802:Mem%40%40382002@fptmobile.hgqhsmu.mongodb.net/BEmobile'; // port => hardcode . uat .prod
+
+// mongoose
+//   .connect(mongoURI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     useCreateIndex: true,
+//   })
+//   .then((res) => {
+//     console.log("MongoDB Connected");
+//   })
+//   .catch((err) => {
+//     console.error("MongoDB Connection Error:", err);
+//   });
+
+//   const store = new MongoDBSession({
+//     uri: mongoURI,
+//     collection: "Mysessions",
+//   });
 
 router.use(
   session({
     secret: "Key that will sign cookie",
     resave: false,
     saveUninitialized: false,
+    // store: store,
   })
 );
 
-//đây chính là controllerrrrrrrrrrrrr
-const getHomepage = async (req, res) => {
+
+
+const getHomePage = async (req, res) => {
   // process data
   // call model
   let results = await User.find({});
-  // res.send('Hello world với Hoi Dan IT & Eric! & nodemon')
-  // console.log("results", results);
-  // console.log(req.session);
-  // res.send("Hello Session tuf");
+  return res.render("homePage.ejs", {
+    listUsers: results,
+  });
+};
+
+
+
+const getListUser = async (req, res) => {
+  // process data
+  // call model
+  let results = await User.find({});
   // req.session.isAuth = true;
-  return res.render("home.ejs", { listUsers: results });
+  // console.log(req.session);
+  // console.log(req.session.id);
+  req.session.isAuth = false;
+  return res.render("listUser.ejs", {
+    listUsers: results,
+  });
 };
 
 const getABC = (req, res) => {
@@ -44,38 +80,45 @@ const getregister = async (req, res) => {
 
 const postlogin = async (req, res) => {
   // res.render("login.ejs"); // tạo ra 1 view động
-  const {email, password} = req.body;
-  const user = await UserTestModels.findOne({email});
+  const { email, password } = req.body;
+  const user = await UserTestModels.findOne({ email });
 
-  if(!user){
-    return res.redirect('/login');
+  // if (!req.session.views) {
+  //   req.session.views = 1;
+  // } else {
+  //   req.session.views++;
+  // }
+  // res.send(`Number of views: ${req.session.views}`);
+
+  if (!user) {
+    return res.redirect("/login");
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
-  if(!isMatch){
-    return res.redirect('/login');
+  if (!isMatch) {
+    return res.redirect("/login");
   }
-
-  res.redirect("/");
+  req.session.isAuth = true;
+  res.redirect("/listUser");
 };
 const postregister = async (req, res) => {
- const {username , email, password} = req.body;
+  const { username, email, password } = req.body;
 
- let user = await UserTestModels.findOne({email});
+  let user = await UserTestModels.findOne({ email });
 
- if(user){
-  return res.redirect('/register');
- }
+  if (user) {
+    return res.redirect("/register");
+  }
 
- const hashedPsw = await bcrypt.hash(password, 12);
- user = new UserTestModels({
-  username,
-  email,
-  password: hashedPsw
- });
- await user.save();
- res.redirect("/login");
+  const hashedPsw = await bcrypt.hash(password, 12);
+  user = new UserTestModels({
+    username,
+    email,
+    password: hashedPsw,
+  });
+  await user.save();
+  res.redirect("/login");
 };
 
 // const getcookie = (req, res) => {
@@ -169,7 +212,8 @@ const postHandleRemoveUser = async (req, res) => {
 };
 module.exports = {
   //export ra nhiều biến(object)
-  getHomepage,
+  getHomePage,
+  getListUser,
   getABC,
   getHoiDanIT,
   postCreateUser,
