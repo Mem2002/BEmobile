@@ -28,8 +28,6 @@ configViewEngine(app); // cấu hình file config
 app.use("/", webRoutes); // dể / ở đây có nghĩa là để / trước /hoidanit //đây chính là router
 app.use("/v1/api", apiRoutes);
 
-
-
 //dùng cách này không đẩy lên clound được
 
 // (async () => {

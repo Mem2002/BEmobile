@@ -16,12 +16,14 @@ const {
   postregister,
   getlogin,
   getregister,
-  // getcookie,
-  // getcookies,
-  // delcookie
+  getcookie,
+  setcookie,
+  delcookie,
+  getbooks,
 } = require("../controllers/homeController");
-var cookieParser = require("cookie-parser");
 const router = express.Router();
+var cookieParser = require("cookie-parser");
+router.use(cookieParser())
 
 router.use(
   session({
@@ -46,8 +48,12 @@ const isAuth = (req, res, next) => {
 //   saveUninitialized: true, // Lưu session mới ngay cả khi chưa có dữ liệu
 // }));
 
+
+
 //khai báo route
 router.get("/", getHomePage);
+router.get('/books', getbooks)
+
 router.get("/listUser", isAuth, getListUser);
 //getHomepage() để ngoặc là thực thi hàm ngay tại đây
 router.get("/abc", getABC); // nhờ có việc khai báo hàm handler bên trong cái router này nên chúng ta có req và res truyền tử trên xuống dưới ở homeController
@@ -57,12 +63,12 @@ router.get("/login", getlogin);
 router.get("/register", getregister);
 router.post("/login", postlogin);
 router.post("/register", postregister);
-// router.get("/cookie/set", getcookies);
-// router.get("/cookie/get", getcookie);
-// // xóa cookie
-// router.get("/cookie/del", delcookie);
+// router.get("/cookie/set", setcookie);
+router.get("/cookie/get", getcookie);
+// xóa cookie
+router.get("/cookie/del", delcookie);
 
-// router.get('/create', getCreatePage);
+router.get('/create', getCreatePage);
 router.get("/update/:id", getUpdatePage);
 router.get("/create", getCreatePage);
 

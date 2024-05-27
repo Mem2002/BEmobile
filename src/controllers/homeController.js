@@ -48,6 +48,22 @@ const getHomePage = async (req, res) => {
   });
 };
 
+const listUser = [
+  {
+    id: 1,
+    name: 'chi pheo',
+    author: 'ABC'
+  },
+  {
+    id: 2,
+    name: 'Chiến tranh và hoa binh',
+    author: 'DEF'
+  },
+];
+
+const getbooks = (req, res) =>{
+  res.json({status: 'Success', data: listUser})
+}
 
 
 const getListUser = async (req, res) => {
@@ -57,7 +73,9 @@ const getListUser = async (req, res) => {
   // req.session.isAuth = true;
   // console.log(req.session);
   // console.log(req.session.id);
-  req.session.isAuth = false;
+  // req.session.isAuth = false;
+  req.session.isAuth = true;
+
   return res.render("listUser.ejs", {
     listUsers: results,
   });
@@ -117,34 +135,35 @@ const postregister = async (req, res) => {
     email,
     password: hashedPsw,
   });
+  
   await user.save();
   res.redirect("/login");
 };
 
-// const getcookie = (req, res) => {
-//   const cookies = req.cookies;
-//   res.send(cookies);
-// };
+const getcookie = (req, res) => {
+  const cookies = req.cookies;
+  res.send(cookies);
+};
 
-// const getcookies = (req, res) => {
+// const setcookie = (req, res) => {
 //   res
 //     .cookie("username", "tipsjavascript", {
 //       // maxAge: 5*1000
+//       // expires: new Date(Date.now() + 5 * 1000),
 //       httpOnly: true,
 //     })
 //     .cookie("blog", "http://anonsytick.com", {
 //       httpOnly: true,
 //       secure: true,
-
 //       //truyền tải 1 dao thức protocol http
 //     });
 //   res.send("SET COOKIES");
 // };
 
-// const delcookie = (req, res) => {
-//   res.clearCookie("blog");
-//   res.send("DEL COOKIES");
-// };
+const delcookie = (req, res) => {
+  res.clearCookie("blog");
+  res.send("DEL COOKIES");
+};
 
 const postCreateUser = async (req, res) => {
   // console.log(">>> req.body: ", req.body)
@@ -226,7 +245,8 @@ module.exports = {
   postregister,
   getlogin,
   getregister,
-  // getcookie,
-  // getcookies,
-  // delcookie,
+  getcookie,
+  // setcookie,
+  delcookie,
+  getbooks,
 };
