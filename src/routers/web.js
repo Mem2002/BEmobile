@@ -20,6 +20,7 @@ const {
   setcookie,
   delcookie,
   getbooks,
+  UserLogin
 } = require("../controllers/homeController");
 const router = express.Router();
 var cookieParser = require("cookie-parser");
@@ -56,7 +57,7 @@ router.get("/listUser", isAuth, getListUser);
 //getHomepage() để ngoặc là thực thi hàm ngay tại đây
 router.get("/abc", getABC); // nhờ có việc khai báo hàm handler bên trong cái router này nên chúng ta có req và res truyền tử trên xuống dưới ở homeController
 
-router.get("/hoidanit", getHoiDanIT);
+
 router.get("/login", getlogin);
 router.get("/register", getregister);
 router.post("/login", postlogin);

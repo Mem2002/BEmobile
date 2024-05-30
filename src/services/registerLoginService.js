@@ -22,7 +22,6 @@ const hashUserPassword = async (password) => {
 };
 
 // check user email
-
 const checkEmail = async (userEmail) => {
   const emailExists = await User.findOne({ email: userEmail });
   if (emailExists) {
@@ -53,6 +52,7 @@ const isPasswordStrong = (password) => {
     numberRegex.test(password)
   );
 };
+
 
 const registerNewUser = async (req) => {
   try {

@@ -72,7 +72,7 @@ const getlogin = async (req, res) => {
 };
 const getregister = async (req, res) => {
   let message = req.query.message;
-    res.render('register.ejs', { message: message });
+  res.render("register.ejs", { message: message });
 };
 
 const postlogin = async (req, res) => {
@@ -95,27 +95,27 @@ const postlogin = async (req, res) => {
 
 const postregister = async (req, res) => {
   const { username, email, password } = req.body;
-  if(!username || !email || !password ){
-    let message = 'Please fill in all fields.';
+  if (!username || !email || !password) {
+    let message = "Please fill in all fields.";
     return res.redirect(`/register?message=${encodeURIComponent(message)}`);
   }
   let isEmailExists = await validateRegister.checkUsername(req.body.username);
   if (isEmailExists == true) {
     // console.log("The username already exists");
-    let message = 'The username already exists.';
+    let message = "The username already exists.";
     return res.redirect(`/register?message=${encodeURIComponent(message)}`);
   }
   let isUsernameExists = await validateRegister.checkEmail(req.body.email);
   if (isUsernameExists == true) {
     // console.log("The email already exists");
-    let message = 'The email already exists.';
+    let message = "The email already exists.";
     return res.redirect(`/register?message=${encodeURIComponent(message)}`);
   }
 
   if (!validateRegister.isPasswordStrong(req.body.password)) {
-    let message = 'Password needs 1 uppercase letter, 1 special character, 1 digit, and minimum 8 characters.';
+    let message =
+      "Password needs 1 uppercase letter, 1 special character, 1 digit, and minimum 8 characters.";
     return res.redirect(`/register?message=${encodeURIComponent(message)}`);
-
   }
   ///////////////////
 
