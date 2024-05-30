@@ -3,7 +3,7 @@ const express = require("express");
 const routerAPI = express.Router();
 // router.Method('/route', handler)
 //khai báo route
-const {getUsersAPI, postCreateUserAPI, putUpdateUserAPI, deleteUserAPI} = require('../controllers/apicontrollers')
+const {getUsersAPI, postCreateUserAPI, putUpdateUserAPI, deleteUserAPI, postregister} = require('../controllers/apicontrollers')
 // routerAPI.get("/", (req, res) => {
 //   res.send("Hello");
 // });
@@ -18,6 +18,10 @@ routerAPI.get("/users", getUsersAPI);
 routerAPI.post("/users", postCreateUserAPI);
 routerAPI.put("/users", putUpdateUserAPI);
 routerAPI.delete("/users", deleteUserAPI);
+
+routerAPI.post("/register", postregister);
+
+
 
 // router.post('/delete-user', postHandleRemoveUser);
 

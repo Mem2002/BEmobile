@@ -1,9 +1,15 @@
 //import {userService} from '../services/userService'
 
-const registerLoginService = require("../services/registerLogin.Service");
+const registerLoginService = require("../services/registerLoginService");
 
 const Login = async (req, res) => {
   try {
+    if (!req.body) {
+      return res.status(400).json({
+        EM: "Not find request in body", //create user success message
+        EC: "1",
+      });
+    }
     let data = await registerLoginService.UserLogin(req.body);
     //set cookie
     res.cookie("jwt", data.DT.access_token, {

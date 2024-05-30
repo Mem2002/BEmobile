@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -13,17 +14,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    role: {
-      role_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "role",
-      },
-      role_name: {
-        type: String,
-      },
-    },
+
+    // role: {
+    //   role_id: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "role",
+    //   },
+    //   role_name: {
+    //     type: String,
+    //   },
+    // },
   },
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("UserTest2", userSchema);
-

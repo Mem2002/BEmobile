@@ -3,9 +3,11 @@ const express = require("express"); //commonjs
 const configViewEngine = require("./config/viewEngine");
 const webRoutes = require("./routers/web");
 const apiRoutes = require("./routers/api");
+const authRouter = require("./routers/auth")
 const connection = require("./config/database");
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+
 
 
 // import express from 'express'
@@ -27,6 +29,7 @@ configViewEngine(app); // cấu hình file config
 //khai báo routes
 app.use("/", webRoutes); // dể / ở đây có nghĩa là để / trước /hoidanit //đây chính là router
 app.use("/v1/api", apiRoutes);
+app.use("/auth", authRouter);
 
 //dùng cách này không đẩy lên clound được
 

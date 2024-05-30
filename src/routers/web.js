@@ -23,7 +23,7 @@ const {
 } = require("../controllers/homeController");
 const router = express.Router();
 var cookieParser = require("cookie-parser");
-router.use(cookieParser())
+router.use(cookieParser());
 
 router.use(
   session({
@@ -48,11 +48,9 @@ const isAuth = (req, res, next) => {
 //   saveUninitialized: true, // Lưu session mới ngay cả khi chưa có dữ liệu
 // }));
 
-
-
 //khai báo route
 router.get("/", getHomePage);
-router.get('/books', getbooks)
+router.get("/books", getbooks);
 
 router.get("/listUser", isAuth, getListUser);
 //getHomepage() để ngoặc là thực thi hàm ngay tại đây
@@ -68,7 +66,7 @@ router.get("/cookie/get", getcookie);
 // xóa cookie
 router.get("/cookie/del", delcookie);
 
-router.get('/create', getCreatePage);
+router.get("/create", getCreatePage);
 router.get("/update/:id", getUpdatePage);
 router.get("/create", getCreatePage);
 
