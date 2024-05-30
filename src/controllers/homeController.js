@@ -68,7 +68,8 @@ const getHoiDanIT = (req, res) => {
   res.render("sample.ejs"); // tạo ra 1 view động
 };
 const getlogin = async (req, res) => {
-  res.render("login.ejs"); // tạo ra 1 view động
+  let message = req.query.message;
+  res.render("login.ejs", { message: message });
 };
 const getregister = async (req, res) => {
   let message = req.query.message;
@@ -78,6 +79,20 @@ const getregister = async (req, res) => {
 const postlogin = async (req, res) => {
   // res.render("login.ejs"); // tạo ra 1 view động
   const { email, password } = req.body;
+
+  let isUsernameExists = await validateRegister.checkEmail(req.body.email);
+  if (isUsernameExists == false) {
+    // console.log("The email already exists");
+    let message = "Please enter correct email or password";
+    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+  }
+
+  if (!validateRegister.isPasswordStrong(req.body.password)) {
+    let message =
+      "Please enter correct email or password";
+    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+  }
+
   const user = await UserTestModels.findOne({ email });
 
   if (!user) {

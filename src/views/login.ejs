@@ -83,6 +83,9 @@ span.psw {
     <label for="psw"><b>Password</b></label>
     <input type="text" placeholder="Enter password" name="password" required>
 
+    <% if (message) { %>
+      <p style="color: red;"><%= message %></p>
+  <% } %>
         
     <button type="submit">Login</button>
     <!-- <label>
