@@ -4,13 +4,6 @@ const routerAPI = express.Router();
 // router.Method('/route', handler)
 //khai báo route
 const {getUsersAPI, postCreateUserAPI, putUpdateUserAPI, deleteUserAPI, postregister, postlogin} = require('../controllers/apicontrollers')
-// routerAPI.get("/", (req, res) => {
-//   res.send("Hello");
-// });
-// routerAPI.get("/abc", (req, res) => {
-//   res.status(200).json({ data: "Hello world first apis" });
-// });
-
 
 
 routerAPI.get("/users", getUsersAPI);
@@ -19,8 +12,9 @@ routerAPI.post("/users", postCreateUserAPI);
 routerAPI.put("/users", putUpdateUserAPI);
 routerAPI.delete("/users", deleteUserAPI);
 
-routerAPI.post("/register", postregister);
-routerAPI.post("/login", postlogin);
+routerAPI.get("/register", postregister);
+routerAPI.get("/login", postlogin);
+// routerAPI.post("/userInformation", information);
 
 
 

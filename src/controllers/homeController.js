@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const express = require("express");
 const UserTestModels = require("../models/UserTest");
+const registerUser = require("../models/registerUser");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const mongoose = require("mongoose");
@@ -45,13 +46,7 @@ const getbooks = (req, res) => {
 };
 
 const getListUser = async (req, res) => {
-  // process data
-  // call model
   let results = await User.find({});
-  // req.session.isAuth = true;
-  // console.log(req.session);
-  // console.log(req.session.id);
-  // req.session.isAuth = false;
   req.session.isAuth = true;
 
   return res.render("listUser.ejs", {
@@ -60,20 +55,68 @@ const getListUser = async (req, res) => {
 };
 
 const getABC = (req, res) => {
-  // nếu mà ta định nghĩa 1 cái hàm đơn lẻ không trong cái web.js kia thì ta sẽ khong có hai biến req và res
   res.send("get ABC");
 };
 const getHoiDanIT = (req, res) => {
-  // res.send("1111111111 vs Nam Anh");
-  res.render("sample.ejs"); // tạo ra 1 view động
+  res.render("sample.ejs");
 };
 const getlogin = async (req, res) => {
   let message = req.query.message;
   res.render("login.ejs", { message: message });
 };
-const getregister = async (req, res) => {
+
+const getRegisterUser = async (req, res) => {
+  res.render("registerUser.ejs");
+};
+
+const postRegisterUser = async (req, res) => {
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
+    let message = "Please fill in all fields.";
+    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+  }
+  let isEmailExists = await validateRegister.checkUsername(req.body.username);
+  if (isEmailExists == true) {
+    // console.log("The username already exists");
+    let message = "The username already exists.";
+    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+  }
+  let isUsernameExists = await validateRegister.checkEmail(req.body.email);
+  if (isUsernameExists == true) {
+    // console.log("The email already exists");
+    let message = "The email already exists.";
+    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+  }
+
+  if (!validateRegister.isPasswordStrong(req.body.password)) {
+    let message =
+      "Password needs 1 uppercase letter, 1 special character, 1 digit, and minimum 8 characters.";
+    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+  }
+  ///////////////////
+
+  let user = await registerUser.findOne({ email });
+
+  if (user) {
+    return res.redirect("/register");
+  }
+
+  const hashedPsw = await bcrypt.hash(password, 12);
+  userAdmin = new registerUser({
+    username,
+    email,
+    password: hashedPsw,
+  });
+
+  const a = await userAdmin.save();
+  console.log(a);
+  req.session.isAuth = true;
+  res.redirect("/login");
+};
+
+const getRegisterAdmin = async (req, res) => {
   let message = req.query.message;
-  res.render("register.ejs", { message: message });
+  res.render("registerAdmin.ejs", { message: message });
 };
 
 const postlogin = async (req, res) => {
@@ -84,13 +127,12 @@ const postlogin = async (req, res) => {
   if (isUsernameExists == false) {
     // console.log("The email already exists");
     let message = "Please enter correct email or password";
-    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+    return res.redirect(`/login?message=${encodeURIComponent(message)}`);
   }
 
   if (!validateRegister.isPasswordStrong(req.body.password)) {
-    let message =
-      "Please enter correct email or password";
-    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+    let message = "Please enter correct email or password";
+    return res.redirect(`/login?message=${encodeURIComponent(message)}`);
   }
 
   const user = await UserTestModels.findOne({ email });
@@ -108,23 +150,23 @@ const postlogin = async (req, res) => {
   res.redirect("/listUser");
 };
 
-const postregister = async (req, res) => {
+const postRegisterAdmin = async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
     let message = "Please fill in all fields.";
-    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+    return res.redirect(`/registeradmin?message=${encodeURIComponent(message)}`);
   }
   let isEmailExists = await validateRegister.checkUsername(req.body.username);
   if (isEmailExists == true) {
     // console.log("The username already exists");
     let message = "The username already exists.";
-    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+    return res.redirect(`/registeradmin?message=${encodeURIComponent(message)}`);
   }
   let isUsernameExists = await validateRegister.checkEmail(req.body.email);
   if (isUsernameExists == true) {
     // console.log("The email already exists");
     let message = "The email already exists.";
-    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+    return res.redirect(`/registeradmin?message=${encodeURIComponent(message)}`);
   }
 
   if (!validateRegister.isPasswordStrong(req.body.password)) {
@@ -153,10 +195,10 @@ const postregister = async (req, res) => {
   res.redirect("/login");
 };
 
-const getcookie = (req, res) => {
-  const cookies = req.cookies;
-  res.send(cookies);
-};
+// const getcookie = (req, res) => {
+//   const cookies = req.cookies;
+//   res.send(cookies);
+// };
 
 // const setcookie = (req, res) => {
 //   res
@@ -173,10 +215,10 @@ const getcookie = (req, res) => {
 //   res.send("SET COOKIES");
 // };
 
-const delcookie = (req, res) => {
-  res.clearCookie("blog");
-  res.send("DEL COOKIES");
-};
+// const delcookie = (req, res) => {
+//   res.clearCookie("blog");
+//   res.send("DEL COOKIES");
+// };
 
 const postCreateUser = async (req, res) => {
   // console.log(">>> req.body: ", req.body)
@@ -258,11 +300,13 @@ module.exports = {
   postDeleteUser,
   postHandleRemoveUser,
   postlogin,
-  postregister,
+  postRegisterAdmin,
   getlogin,
-  getregister,
-  getcookie,
+  getRegisterAdmin,
+  // getcookie,
   // setcookie,
-  delcookie,
+  // delcookie,
   getbooks,
+  getRegisterUser,
+  postRegisterUser,
 };

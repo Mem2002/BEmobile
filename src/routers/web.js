@@ -13,14 +13,17 @@ const {
   postDeleteUser,
   postHandleRemoveUser,
   postlogin,
-  postregister,
+  postRegisterAdmin,
   getlogin,
-  getregister,
-  getcookie,
-  setcookie,
-  delcookie,
+  getRegisterAdmin,
+  // getcookie,
+  // setcookie,
+  // delcookie,
   getbooks,
-  UserLogin
+  // UserLogin
+  getRegisterUser,
+  postRegisterUser,
+
 } = require("../controllers/homeController");
 const router = express.Router();
 var cookieParser = require("cookie-parser");
@@ -31,6 +34,7 @@ router.use(
     secret: "Key that will sign cookie",
     resave: false,
     saveUninitialized: false,
+    cookie: { secure: false }
   })
 );
 
@@ -59,13 +63,15 @@ router.get("/abc", getABC); // nhờ có việc khai báo hàm handler bên tron
 
 
 router.get("/login", getlogin);
-router.get("/register", getregister);
+router.get("/registeradmin", getRegisterAdmin);
 router.post("/login", postlogin);
-router.post("/register", postregister);
+router.post("/registeradmin", postRegisterAdmin);
+router.get("/registerUser", getRegisterUser);
+router.post("/registerUser", postRegisterUser);
 // router.get("/cookie/set", setcookie);
-router.get("/cookie/get", getcookie);
+// router.get("/cookie/get", getcookie);
 // xóa cookie
-router.get("/cookie/del", delcookie);
+// router.get("/cookie/del", delcookie);
 
 router.get("/create", getCreatePage);
 router.get("/update/:id", getUpdatePage);

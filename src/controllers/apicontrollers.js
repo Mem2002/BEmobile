@@ -14,78 +14,6 @@ const checkPassword = (inputPassword, hashPassword) => {
   return bcrypt.compareSync(inputPassword, hashPassword);
 };
 
-const UserLogin = async (rawData) => {
-  try {
-    // Check if email and password are not empty
-    if (!rawData.email || !rawData.password) {
-      return {
-        EM: "Email and password must not be empty",
-        EC: 1,
-        DT: "",
-      };
-    }
-
-    // Check if password length is between 8 and 10
-
-    // Check if email length is between 50 and 255
-    // if (rawData.email.length < 10 || rawData.email.length > 55) {
-    //   return {
-    //     EM: "Email must be between 50 and 255 characters",
-    //     EC: 1,
-    //     DT: "",
-    //   };
-    // }
-
-    const isEmail = validator.isEmail(rawData.email);
-    if (isEmail) {
-      let user = await User.findOne({ email: rawData.email });
-      if (user) {
-        let IsCorrectPass = checkPassword(rawData.password, user.password);
-        if (IsCorrectPass === true) {
-          let groupWithRole = await getGWR.GetGroupWithRole(user);
-          let tokenJWT = await JWTaction.createJWT({
-            id: user._id,
-            email: user.email,
-            groupWithRole,
-            faculty_id: user.faculty ? user.faculty.faculty_id : null,
-          });
-          return {
-            EM: "Login successful",
-            EC: 0,
-            DT: {
-              access_token: tokenJWT,
-              expiresIn: process.env.JWT_EXPIRES_IN,
-              data: {
-                id: user._id,
-                username: user.username,
-                groupWithRole,
-                faculty_id: user.faculty ? user.faculty.faculty_id : null,
-              },
-            },
-          };
-        }
-      }
-      return {
-        EM: "Your email or password is incorrect",
-        EC: 1,
-        DT: "",
-      };
-    } else {
-      return {
-        EM: "user name is not a email or is not email",
-        EC: 1,
-        DT: "",
-      };
-    }
-  } catch (e) {
-    console.log(">>> Error login user (service): " + e.message);
-    return {
-      EM: "Something Wrong with server",
-      EC: 10,
-    };
-  }
-};
-
 
 const postregister = async (req, res) => {
   const { username, email, password } = req.body;
@@ -190,7 +118,7 @@ const postlogin = async (req, res) => {
   const a = await user.save();
   console.log(a);
   return res.status(200).json({ 
-    EM: "User created successfully", //error message
+    EM: "User created successfully",
     EC: "0", //error code
     DT: a, //data
   })
@@ -202,7 +130,6 @@ const postlogin = async (req, res) => {
 const getUsersAPI = async (req, res) => {
   let results = await User.find({});
   return res.status(200).json({
-    // mã lỗi để hiển thị 1 cách linh động
     EC: 0,
     data: results,
   });
@@ -254,5 +181,4 @@ module.exports = {
   deleteUserAPI,
   postregister,
   postlogin,
-  UserLogin,
 };

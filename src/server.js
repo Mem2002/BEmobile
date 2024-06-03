@@ -5,45 +5,26 @@ const webRoutes = require("./routers/web");
 const apiRoutes = require("./routers/api");
 const authRouter = require("./routers/auth")
 const connection = require("./config/database");
-const session = require('express-session');
-const cookieParser = require('cookie-parser');
+// const session = require('express-session');
+// const cookieParser = require('cookie-parser');
+// import {createJWT}  from "./middleware/jwtAction"
 
 
 
-// import express from 'express'
-// console.log(">>> check env: ", process.env);
 
-const app = express(); // app express
-const port = process.env.PORT || 8888; // port => hardcode . uat .prod
+const app = express();
+const port = process.env.PORT || 8888;
 const hostname = process.env.HOST_NAME;
 
-//config req.body
-app.use(express.json()); //for json
-app.use(express.urlencoded({extended: false})); //for form data
 
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
-//req (request), res(response) là 2 object trong môi trường Node.js
-//config template engine
 configViewEngine(app); // cấu hình file config
 
-//khai báo routes
-app.use("/", webRoutes); // dể / ở đây có nghĩa là để / trước /hoidanit //đây chính là router
+app.use("/", webRoutes); 
 app.use("/v1/api", apiRoutes);
 app.use("/auth", authRouter);
-
-//dùng cách này không đẩy lên clound được
-
-// (async () => {
-//   //test connection
-//   try {
-//     await connection();
-//     app.listen(port, hostname, () => {
-//       console.log(`Backend zero app listening on port ${port}`);
-//     });
-//   } catch (error) {
-//     console.log(">>> Error connect to DB", error);
-//   }
-// })();
 
 app.listen(port, async () => {
   try {
@@ -52,6 +33,5 @@ app.listen(port, async () => {
   } catch (err) {
     console.log(">>> Error connect to DB", error);
     console.log(">>> Err when starting server: " + err);
-
   }
 });
