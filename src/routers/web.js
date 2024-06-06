@@ -1,5 +1,6 @@
 const express = require("express");
 const session = require("express-session");
+const reqlogin = require("../middleware/reqlogin")
 
 const {
   getHomePage,
@@ -29,14 +30,14 @@ const router = express.Router();
 var cookieParser = require("cookie-parser");
 router.use(cookieParser());
 
-router.use(
-  session({
-    secret: "Key that will sign cookie",
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false }
-  })
-);
+// router.use(
+//   session({
+//     secret: "Key that will sign cookie",
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: { secure: false }
+//   })
+// );
 
 const isAuth = (req, res, next) => {
   if (req.session.isAuth) {
@@ -57,7 +58,6 @@ const isAuth = (req, res, next) => {
 router.get("/", getHomePage);
 router.get("/books", getbooks);
 
-router.get("/listUser", isAuth, getListUser);
 //getHomepage() để ngoặc là thực thi hàm ngay tại đây
 router.get("/abc", getABC); // nhờ có việc khai báo hàm handler bên trong cái router này nên chúng ta có req và res truyền tử trên xuống dưới ở homeController
 
@@ -65,6 +65,8 @@ router.get("/abc", getABC); // nhờ có việc khai báo hàm handler bên tron
 router.get("/login", getlogin);
 router.get("/registeradmin", getRegisterAdmin);
 router.post("/login", postlogin);
+router.use(reqlogin);
+router.get("/listUser", getListUser);
 router.post("/registeradmin", postRegisterAdmin);
 router.get("/registerUser", getRegisterUser);
 router.post("/registerUser", postRegisterUser);

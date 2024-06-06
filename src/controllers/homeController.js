@@ -3,26 +3,27 @@ const express = require("express");
 const UserTestModels = require("../models/UserTest");
 const registerUser = require("../models/registerUser");
 const bcrypt = require("bcryptjs");
-const session = require("express-session");
+// const session = require("express-session");
 const mongoose = require("mongoose");
-const MongoDBSession = require("connect-mongodb-session")(session);
+// const MongoDBSession = require("connect-mongodb-session")(session);
 const router = express.Router();
 const validateRegister = require("../services/registerLoginService");
+const JWTaction = require("../middleware/jwtAction");
 
-router.use(
-  session({
-    secret: "Key that will sign cookie",
-    resave: false,
-    saveUninitialized: false,
-    // store: store,
-  })
-);
+// router.use(
+//   session({
+//     secret: "Key that will sign cookie",
+//     resave: false,
+//     saveUninitialized: false,
+//     // store: store,
+//   })
+// );
 
 const getHomePage = async (req, res) => {
   // process data
   // call model
   let results = await User.find({});
-  req.session.isAuth = true;
+  // req.session.isAuth = true;
   return res.render("homePage.ejs", {
     listUsers: results,
   });
@@ -47,7 +48,7 @@ const getbooks = (req, res) => {
 
 const getListUser = async (req, res) => {
   let results = await User.find({});
-  req.session.isAuth = true;
+  // req.session.isAuth = true;
 
   return res.render("listUser.ejs", {
     listUsers: results,
@@ -110,7 +111,7 @@ const postRegisterUser = async (req, res) => {
 
   const a = await userAdmin.save();
   console.log(a);
-  req.session.isAuth = true;
+  // req.session.isAuth = true;
   res.redirect("/login");
 };
 
@@ -119,13 +120,17 @@ const getRegisterAdmin = async (req, res) => {
   res.render("registerAdmin.ejs", { message: message });
 };
 
+const checkPassword = (inputPassword, hashPassword) => {
+  return bcrypt.compareSync(inputPassword, hashPassword);
+};
+
 const postlogin = async (req, res) => {
+
   // res.render("login.ejs"); // tạo ra 1 view động
   const { email, password } = req.body;
 
   let isUsernameExists = await validateRegister.checkEmail(req.body.email);
   if (isUsernameExists == false) {
-    // console.log("The email already exists");
     let message = "Please enter correct email or password";
     return res.redirect(`/login?message=${encodeURIComponent(message)}`);
   }
@@ -135,19 +140,28 @@ const postlogin = async (req, res) => {
     return res.redirect(`/login?message=${encodeURIComponent(message)}`);
   }
 
-  const user = await UserTestModels.findOne({ email });
-
+  let user = await UserTestModels.findOne({ email });
+  if (user) {
+    let IsCorrectPass = checkPassword(req.body.password, user.password);
+    if (IsCorrectPass === true) {
+      let tokenJWT = await JWTaction.createJWT({
+        id: user._id,
+        email: user.email,
+      });
+      res.cookie("jwt", tokenJWT, {
+        maxAge: 60 * 60 * 1000, // set time for cookie
+        httpOnly: true, // only use from server
+      });
+      // req.session.isAuth = true;
+      res.redirect("/listUser");
+      console.log("login success")
+    }
+  }
   if (!user) {
-    return res.redirect("/login");
+    let message = "Not found user";
+    return res.redirect(`/login?message=${encodeURIComponent(message)}`);
   }
 
-  const isMatch = await bcrypt.compare(password, user.password);
-
-  if (!isMatch) {
-    return res.redirect("/login");
-  }
-  req.session.isAuth = true;
-  res.redirect("/listUser");
 };
 
 const postRegisterAdmin = async (req, res) => {
@@ -191,7 +205,7 @@ const postRegisterAdmin = async (req, res) => {
 
   const a = await user.save();
   console.log(a);
-  req.session.isAuth = true;
+  // req.session.isAuth = true;
   res.redirect("/login");
 };
 
@@ -238,7 +252,7 @@ const postCreateUser = async (req, res) => {
   //   name,
   //   city
   // })
-  req.session.isAuth = true;
+  // req.session.isAuth = true;
   res.send("Create user succeed!");
 };
 
@@ -250,7 +264,7 @@ const getUpdatePage = async (req, res) => {
   // let user = await getUserById(userId);
   let user = await User.findById(userId).exec();
   // console.log(">>> req.params::", req.params, userId)
-  req.session.isAuth = true;
+  // req.session.isAuth = true;
   res.render("edit.ejs", { userEdit: user });
 };
 
@@ -269,7 +283,7 @@ const postUpdateUser = async (req, res) => {
     { _id: userId },
     { email: email, name: name, phone: phone }
   );
-  req.session.isAuth = true;
+  // req.session.isAuth = true;
   res.redirect("/listUser");
 };
 

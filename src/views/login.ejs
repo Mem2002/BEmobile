@@ -54,6 +54,15 @@ span.psw {
   padding-top: 16px;
 }
 
+.signin {
+  /* background-color: #f1f1f1; */
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px; /* Adjust the height as needed */
+}
+
 /* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
   span.psw {
@@ -91,10 +100,11 @@ span.psw {
     <!-- <label>
       <input type="checkbox" checked="checked" name="remember"> Remember me
     </label> -->
+    <div class="container signin">
+      <p>Register for an admin account? <a href="/registeradmin">Register admin</a>.</p>
+    </div>
     
   </div>
-
- 
 </form>
 
 </body>

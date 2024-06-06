@@ -6,7 +6,7 @@ const User = require("../models/UserTest");
 const bcrypt = require("bcrypt");
 // const getGWR = require("../services/jwt.Service");
 // const uploadFile = require("../services/file.Service");
-// const JWTaction = require("../middleware/jwtAction");
+const JWTaction = require("../middleware/jwtAction");
 const path = require("path");
 
 //---------------- Register ------------------
@@ -201,12 +201,12 @@ const UserLogin = async (rawData) => {
       if (user) {
         let IsCorrectPass = checkPassword(rawData.password, user.password);
         if (IsCorrectPass === true) {
-          let groupWithRole = await getGWR.GetGroupWithRole(user);
+          // let groupWithRole = await getGWR.GetGroupWithRole(user);
           let tokenJWT = await JWTaction.createJWT({
             id: user._id,
             email: user.email,
-            groupWithRole,
-            faculty_id: user.faculty ? user.faculty.faculty_id : null,
+            // groupWithRole,
+            // faculty_id: user.faculty ? user.faculty.faculty_id : null,
           });
           return {
             EM: "Login successful",

@@ -128,11 +128,18 @@ const postlogin = async (req, res) => {
 
 
 const getUsersAPI = async (req, res) => {
-  let results = await User.find({});
-  return res.status(200).json({
-    EC: 0,
-    data: results,
-  });
+  try {
+    let results = await User.find({}).select('-password'); // Loại bỏ trường password
+    return res.status(200).json({
+      EC: 0,
+      data: results,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      EC: -1,
+      message: 'Error fetching users',
+    });
+  }
 };
 const postCreateUserAPI = async (req, res) => {
   // console.log(">>> req.body: ", req.body)
