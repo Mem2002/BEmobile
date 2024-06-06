@@ -1,4 +1,4 @@
-const validator = require("validator");
+// const validator = require("validator");
 require("dotenv").config();
 const User = require("../models/userModel");
 const GroupModel = require("../models/groupModel");

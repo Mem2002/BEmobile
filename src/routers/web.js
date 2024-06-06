@@ -62,14 +62,16 @@ router.get("/books", getbooks);
 router.get("/abc", getABC); // nhờ có việc khai báo hàm handler bên trong cái router này nên chúng ta có req và res truyền tử trên xuống dưới ở homeController
 
 
-router.get("/login", getlogin);
+// router.get("/login", getlogin);
 router.get("/registeradmin", getRegisterAdmin);
-router.post("/login", postlogin);
-router.use(reqlogin);
-router.get("/listUser", getListUser);
+
+router.get("/login", getlogin);
 router.post("/registeradmin", postRegisterAdmin);
 router.get("/registerUser", getRegisterUser);
 router.post("/registerUser", postRegisterUser);
+// router.use(reqlogin);
+router.post("/login", postlogin);
+router.get("/listUser", getListUser);
 // router.get("/cookie/set", setcookie);
 // router.get("/cookie/get", getcookie);
 // xóa cookie

@@ -8,6 +8,7 @@ const {getUsersAPI, postCreateUserAPI, putUpdateUserAPI, deleteUserAPI, postregi
 
 routerAPI.get("/users", getUsersAPI);
 routerAPI.post("/users", postCreateUserAPI);
+//=> Dùng cùng một endpoint /users cho cả GET và POST 
 
 routerAPI.put("/users", putUpdateUserAPI);
 routerAPI.delete("/users", deleteUserAPI);
