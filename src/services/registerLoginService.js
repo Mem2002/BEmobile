@@ -118,24 +118,24 @@ const registerNewUser = async (req) => {
         };
       }
 
-      if (req.files && req.files.image) {
-        const image = req.files.image;
-        const allowedImageTypes = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-        if (!allowedImageTypes.test(path.extname(image.name))) {
-          throw new Error("Only image files are allowed (JPEG, JPG, PNG, GIF)");
-        }
-        try {
-          let result_image = await uploadFile.uploadImageUser(image);
-          if (result_image.EC === 0) {
-            user.image = result_image.DT.path;
-          } else {
-            throw new Error("An error occurred while uploading the image");
-          }
-        } catch (error) {
-          console.log("Error uploading image:", error);
-          throw new Error("An error occurred while uploading the image");
-        }
-      }
+      // if (req.files && req.files.image) {
+      //   const image = req.files.image;
+      //   const allowedImageTypes = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+      //   if (!allowedImageTypes.test(path.extname(image.name))) {
+      //     throw new Error("Only image files are allowed (JPEG, JPG, PNG, GIF)");
+      //   }
+      //   try {
+      //     let result_image = await uploadFile.uploadImageUser(image);
+      //     if (result_image.EC === 0) {
+      //       user.image = result_image.DT.path;
+      //     } else {
+      //       throw new Error("An error occurred while uploading the image");
+      //     }
+      //   } catch (error) {
+      //     console.log("Error uploading image:", error);
+      //     throw new Error("An error occurred while uploading the image");
+      //   }
+      // }
       try {
         const result = await user.save();
         console.log(result);
