@@ -1,5 +1,5 @@
-const validator = require("validator");
 require("dotenv").config();
+const validator = require("validator");
 const User = require("../models/UserTest");
 // const GroupModel = require("../models/groupModel");
 // const FacultyModel = require("../models/facultyModel");
