@@ -30,22 +30,22 @@ const router = express.Router();
 var cookieParser = require("cookie-parser");
 router.use(cookieParser());
 
-// router.use(
-//   session({
-//     secret: "Key that will sign cookie",
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: { secure: false }
-//   })
-// );
+router.use(
+  session({
+    secret: "Key that will sign cookie",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }
+  })
+);
 
-const isAuth = (req, res, next) => {
-  if (req.session.isAuth) {
-    next();
-  } else {
-    res.redirect("/login");
-  }
-};
+// const isAuth = (req, res, next) => {
+//   if (req.session.isAuth) {
+//     next();
+//   } else {
+//     res.redirect("/login");
+//   }
+// };
 // router.use(cookieParser());
 // // router.Method('/route', handler)
 // app.use(session({
@@ -66,12 +66,12 @@ router.get("/abc", getABC); // nhờ có việc khai báo hàm handler bên tron
 router.get("/registeradmin", getRegisterAdmin);
 
 router.get("/login", getlogin);
+router.post("/login", postlogin);
 router.post("/registeradmin", postRegisterAdmin);
 router.get("/registerUser", getRegisterUser);
 router.post("/registerUser", postRegisterUser);
 // router.use(reqlogin);
-router.post("/login", postlogin);
-router.get("/listUser", getListUser);
+router.get("/listUser", reqlogin, getListUser);
 // router.get("/cookie/set", setcookie);
 // router.get("/cookie/get", getcookie);
 // xóa cookie

@@ -3,9 +3,9 @@ const express = require("express");
 const UserTestModels = require("../models/UserTest");
 const registerUser = require("../models/registerUser");
 const bcrypt = require("bcryptjs");
-// const session = require("express-session");
+const session = require("express-session");
 const mongoose = require("mongoose");
-// const MongoDBSession = require("connect-mongodb-session")(session);
+const MongoDBSession = require("connect-mongodb-session")(session);
 const router = express.Router();
 const validateRegister = require("../services/registerLoginService");
 const JWTaction = require("../middleware/jwtAction");
@@ -111,7 +111,7 @@ const postRegisterUser = async (req, res) => {
 
   const a = await userAdmin.save();
   console.log(a);
-  // req.session.isAuth = true;
+  // req.session.isAuth = true;/
   res.redirect("/login");
 };
 

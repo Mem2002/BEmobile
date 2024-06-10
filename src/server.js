@@ -5,18 +5,15 @@ const webRoutes = require("./routers/web");
 const apiRoutes = require("./routers/api");
 const authRouter = require("./routers/auth")
 const connection = require("./config/database");
-// const session = require('express-session');
+const session = require('express-session');
 // const cookieParser = require('cookie-parser');
 // import {createJWT}  from "./middleware/jwtAction"
-
 
 
 
 const app = express();
 const port = process.env.PORT || 8888;
 const hostname = process.env.HOST_NAME;
-
-
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
