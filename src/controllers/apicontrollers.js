@@ -131,6 +131,7 @@ const getUsersAPI = async (req, res) => {
   try {
     let results = await User.find({}).select('-password'); // Loại bỏ trường password
     return res.status(200).json({
+      EC: 0,
       data: results,
     });
   } catch (error) {
@@ -180,6 +181,21 @@ const deleteUserAPI = async (req, res) => {
     data: results,
   });
 };
+
+const getUsersPayslipAPI = async (req, res) => {
+  try {
+    let results = await User.find({}).select('-password'); // Loại bỏ trường password
+    return res.status(200).json({
+      EC: 0,
+      data: results,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      EC: -1,
+      message: 'Error fetching users',
+    });
+  }
+}
 module.exports = {
   getUsersAPI,
   postCreateUserAPI,
@@ -187,4 +203,5 @@ module.exports = {
   deleteUserAPI,
   postregister,
   postlogin,
+  getUsersPayslipAPI,
 };
