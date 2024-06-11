@@ -131,7 +131,6 @@ const getUsersAPI = async (req, res) => {
   try {
     let results = await User.find({}).select('-password'); // Loại bỏ trường password
     return res.status(200).json({
-      EC: 0,
       data: results,
     });
   } catch (error) {
