@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const express = require("express");
 const UserTestModels = require("../models/UserTest");
-const registerUser = require("../models/registerUser");
+const userModels = require("../models/registerUser");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const mongoose = require("mongoose");
@@ -49,21 +49,59 @@ const getbooks = (req, res) => {
 const getListUser = async (req, res) => {
   let results = await User.find({});
   // req.session.isAuth = true;
-
+  req.session.loggedIn = true;
   return res.render("listUser.ejs", {
     listUsers: results,
   });
 };
 
-const getABC = (req, res) => {
-  res.send("get ABC");
-};
-const getHoiDanIT = (req, res) => {
-  res.render("sample.ejs");
-};
-const getlogin = async (req, res) => {
+const getloginUser = async (req, res) => {
   let message = req.query.message;
-  res.render("login.ejs", { message: message });
+  res.render("loginUser.ejs", { message: message });
+};
+
+const postLoginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  let isUsernameExists = await validateRegister.checkEmail(req.body.email);
+  if (isUsernameExists == false) {
+    let message = "Please enter correct email or password";
+    return res.redirect(`/loginUser?message=${encodeURIComponent(message)}`);
+  }
+
+  if (!validateRegister.isPasswordStrong(req.body.password)) {
+    let message = "Please enter correct email or password";
+    return res.redirect(`/loginUser?message=${encodeURIComponent(message)}`);
+  }
+
+  let user = await userModels.findOne({ email });
+  console.log("user");
+  if (user) {
+    let IsCorrectPass = checkPassword(req.body.password, user.password);
+    if (IsCorrectPass === true) {
+      let tokenJWT = await JWTaction.createJWT({
+        id: user._id,
+        email: user.email,
+      });
+      res.cookie("jwt", tokenJWT, {
+        maxAge: 60 * 60 * 1000, // set time for cookie
+        httpOnly: true, // only use from server
+      });
+      // req.session.isAuth = true;
+      req.session.loggedIn = true;
+      res.redirect("/listUser");
+      console.log("login success");
+    }
+  }
+  if (!user) {
+    let message = "Not found user";
+    return res.redirect(`/loginUser?message=${encodeURIComponent(message)}`);
+  }
+};
+
+const getLoginAdmin = async (req, res) => {
+  let message = req.query.message;
+  res.render("loginAdmin.ejs", { message: message });
 };
 
 const getRegisterUser = async (req, res) => {
@@ -74,45 +112,52 @@ const postRegisterUser = async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
     let message = "Please fill in all fields.";
-    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+    return res.redirect(
+      `/registerAdmin?message=${encodeURIComponent(message)}`
+    );
   }
   let isEmailExists = await validateRegister.checkUsername(req.body.username);
   if (isEmailExists == true) {
     // console.log("The username already exists");
     let message = "The username already exists.";
-    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+    return res.redirect(
+      `/registerAdmin?message=${encodeURIComponent(message)}`
+    );
   }
   let isUsernameExists = await validateRegister.checkEmail(req.body.email);
   if (isUsernameExists == true) {
     // console.log("The email already exists");
     let message = "The email already exists.";
-    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+    return res.redirect(
+      `/registerAdmin?message=${encodeURIComponent(message)}`
+    );
   }
 
   if (!validateRegister.isPasswordStrong(req.body.password)) {
     let message =
       "Password needs 1 uppercase letter, 1 special character, 1 digit, and minimum 8 characters.";
-    return res.redirect(`/register?message=${encodeURIComponent(message)}`);
+    return res.redirect(
+      `/registerAdmin?message=${encodeURIComponent(message)}`
+    );
   }
-  ///////////////////
 
-  let user = await registerUser.findOne({ email });
+  let user = await userModels.findOne({ email });
 
   if (user) {
-    return res.redirect("/register");
+    return res.redirect("/registerUser");
   }
 
   const hashedPsw = await bcrypt.hash(password, 12);
-  userAdmin = new registerUser({
+  user = new userModels({
     username,
     email,
     password: hashedPsw,
   });
 
-  const a = await userAdmin.save();
+  const a = await user.save();
   console.log(a);
-  // req.session.isAuth = true;/
-  res.redirect("/login");
+  // req.session.isAuth = true;
+  res.redirect("/loginUser");
 };
 
 const getRegisterAdmin = async (req, res) => {
@@ -124,20 +169,18 @@ const checkPassword = (inputPassword, hashPassword) => {
   return bcrypt.compareSync(inputPassword, hashPassword);
 };
 
-const postlogin = async (req, res) => {
-
-  // res.render("login.ejs"); // tạo ra 1 view động
+const postLoginAdmin = async (req, res) => {
   const { email, password } = req.body;
 
   let isUsernameExists = await validateRegister.checkEmail(req.body.email);
   if (isUsernameExists == false) {
     let message = "Please enter correct email or password";
-    return res.redirect(`/login?message=${encodeURIComponent(message)}`);
+    return res.redirect(`/loginAdmin?message=${encodeURIComponent(message)}`);
   }
 
   if (!validateRegister.isPasswordStrong(req.body.password)) {
     let message = "Please enter correct email or password";
-    return res.redirect(`/login?message=${encodeURIComponent(message)}`);
+    return res.redirect(`/loginAdmin?message=${encodeURIComponent(message)}`);
   }
 
   let user = await UserTestModels.findOne({ email });
@@ -153,34 +196,40 @@ const postlogin = async (req, res) => {
         httpOnly: true, // only use from server
       });
       // req.session.isAuth = true;
+      req.session.loggedIn = true;
       res.redirect("/listUser");
-      console.log("login success")
+      console.log("login success");
     }
   }
   if (!user) {
     let message = "Not found user";
-    return res.redirect(`/login?message=${encodeURIComponent(message)}`);
+    return res.redirect(`/loginAdmin?message=${encodeURIComponent(message)}`);
   }
-
 };
 
 const postRegisterAdmin = async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
     let message = "Please fill in all fields.";
-    return res.redirect(`/registeradmin?message=${encodeURIComponent(message)}`);
+    return res.redirect(
+      `/registeradmin?message=${encodeURIComponent(message)}`
+    );
   }
   let isEmailExists = await validateRegister.checkUsername(req.body.username);
   if (isEmailExists == true) {
     // console.log("The username already exists");
     let message = "The username already exists.";
-    return res.redirect(`/registeradmin?message=${encodeURIComponent(message)}`);
+    return res.redirect(
+      `/registeradmin?message=${encodeURIComponent(message)}`
+    );
   }
   let isUsernameExists = await validateRegister.checkEmail(req.body.email);
   if (isUsernameExists == true) {
     // console.log("The email already exists");
     let message = "The email already exists.";
-    return res.redirect(`/registeradmin?message=${encodeURIComponent(message)}`);
+    return res.redirect(
+      `/registeradmin?message=${encodeURIComponent(message)}`
+    );
   }
 
   if (!validateRegister.isPasswordStrong(req.body.password)) {
@@ -206,7 +255,7 @@ const postRegisterAdmin = async (req, res) => {
   const a = await user.save();
   console.log(a);
   // req.session.isAuth = true;
-  res.redirect("/login");
+  res.redirect("/loginAdmin");
 };
 
 // const getcookie = (req, res) => {
@@ -305,17 +354,15 @@ module.exports = {
   //export ra nhiều biến(object)
   getHomePage,
   getListUser,
-  getABC,
-  getHoiDanIT,
   postCreateUser,
   getCreatePage,
   getUpdatePage,
   postUpdateUser,
   postDeleteUser,
   postHandleRemoveUser,
-  postlogin,
+  postLoginAdmin,
   postRegisterAdmin,
-  getlogin,
+  getLoginAdmin,
   getRegisterAdmin,
   // getcookie,
   // setcookie,
@@ -323,4 +370,6 @@ module.exports = {
   getbooks,
   getRegisterUser,
   postRegisterUser,
+  postLoginUser,
+  getloginUser,
 };

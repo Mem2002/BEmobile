@@ -1,22 +1,21 @@
 const express = require("express");
 const session = require("express-session");
-const reqlogin = require("../middleware/reqlogin")
+const reqlogin = require("../middleware/reqlogin");
 
 const {
   getHomePage,
   getListUser,
-  getABC,
-  getHoiDanIT,
   postCreateUser,
   getCreatePage,
   getUpdatePage,
   postUpdateUser,
   postDeleteUser,
   postHandleRemoveUser,
-  postlogin,
+  postLoginAdmin,
   postRegisterAdmin,
-  getlogin,
+  getLoginAdmin,
   getRegisterAdmin,
+  postLoginUser,
   // getcookie,
   // setcookie,
   // delcookie,
@@ -24,7 +23,7 @@ const {
   // UserLogin
   getRegisterUser,
   postRegisterUser,
-
+  getloginUser,
 } = require("../controllers/homeController");
 const router = express.Router();
 var cookieParser = require("cookie-parser");
@@ -35,7 +34,7 @@ router.use(
     secret: "Key that will sign cookie",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }
+    cookie: { secure: false },
   })
 );
 
@@ -58,16 +57,15 @@ router.use(
 router.get("/", getHomePage);
 router.get("/books", getbooks);
 
-//getHomepage() để ngoặc là thực thi hàm ngay tại đây
-router.get("/abc", getABC); // nhờ có việc khai báo hàm handler bên trong cái router này nên chúng ta có req và res truyền tử trên xuống dưới ở homeController
-
-
 // router.get("/login", getlogin);
-router.get("/registeradmin", getRegisterAdmin);
 
-router.get("/login", getlogin);
-router.post("/login", postlogin);
+
+router.get("/loginAdmin", getLoginAdmin);
+router.post("/loginAdmin", postLoginAdmin);
+router.get("/registeradmin", getRegisterAdmin);
 router.post("/registeradmin", postRegisterAdmin);
+router.get("/loginUser", getloginUser);
+router.post("/loginUser", postLoginUser);
 router.get("/registerUser", getRegisterUser);
 router.post("/registerUser", postRegisterUser);
 // router.use(reqlogin);

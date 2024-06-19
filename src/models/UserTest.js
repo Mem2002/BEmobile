@@ -28,4 +28,4 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("UserTest2", userSchema);
+module.exports = mongoose.model("adminRe", userSchema);

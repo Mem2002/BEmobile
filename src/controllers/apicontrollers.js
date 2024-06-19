@@ -1,8 +1,8 @@
 const User = require("../models/UserTest");
 const validateRegister = require("../services/registerLoginService");
-const bcrypt = require ('bcrypt');
-
-
+const bcrypt = require("bcrypt");
+const UserTestModels = require("../models/UserTest");
+const JWTaction = require("../middleware/jwtAction");
 
 //---------------- Login ------------------
 //check lengthen of password
@@ -14,15 +14,14 @@ const checkPassword = (inputPassword, hashPassword) => {
   return bcrypt.compareSync(inputPassword, hashPassword);
 };
 
-
 const postregister = async (req, res) => {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
     return res.status(400).json({
-      EM: "Missing data required", 
-      EC: "1", 
-      DT: "", 
+      EM: "Missing data required",
+      EC: "1",
+      DT: "",
     });
   }
 
@@ -30,9 +29,9 @@ const postregister = async (req, res) => {
   if (isUsernameExists == true) {
     // console.log("The email already exists");
     return res.status(400).json({
-      EM: "The email already exists", 
-      EC: "1", 
-      DT: "", 
+      EM: "The email already exists",
+      EC: "1",
+      DT: "",
     });
   }
 
@@ -46,7 +45,6 @@ const postregister = async (req, res) => {
   // if (user) {
   //   return res.redirect("/register");
   // }
-  
 
   const hashedPsw = await bcrypt.hash(password, 12);
   user = new User({
@@ -57,79 +55,74 @@ const postregister = async (req, res) => {
 
   const a = await user.save();
   console.log(a);
-  return res.status(200).json({ 
+  return res.status(200).json({
     EM: "User created successfully", //error message
     EC: "0", //error code
     DT: a, //data
-  })
+  });
   // req.session.isAuth = true;
   // res.redirect("/login");
 };
-
 
 const postlogin = async (req, res) => {
   const { email, password } = req.body;
 
-  if ( !email || !password) {
-    return res.status(400).json({
-      EM: "Missing data required", 
-      EC: "1", 
-      DT: "", 
-    });
-  }
-  let isEmailExists = await validateRegister.checkUsername(req.body.username);
-  if (isEmailExists == true) {
-    // console.log("The username already exists");
-    return res.status(400).json({
-      EM: "The username already exists", 
-      EC: "1", 
-      DT: "",
-    });
-  }
   let isUsernameExists = await validateRegister.checkEmail(req.body.email);
-  if (isUsernameExists == true) {
-    // console.log("The email already exists");
+  if (isUsernameExists == false) {
+    let message = "Please enter correct email or password";
     return res.status(400).json({
-      EM: "The email already exists", 
-      EC: "1", 
-      DT: "", 
+      EM: message, //error message
+      EC: "1", //error code
     });
   }
 
   if (!validateRegister.isPasswordStrong(req.body.password)) {
+    let message = "Please enter correct email or password";
     return res.status(400).json({
-      EM: "Password needs 1 uppercase letter, 1 special character, 1 digit, and minimum 8 characters.", //error message
+      EM: message, //error message
       EC: "1", //error code
-      DT: "", //data
     });
   }
-  // if (user) {
-  //   return res.redirect("/register");
-  // }
-  
 
-  const hashedPsw = await bcrypt.hash(password, 12);
-  user = new User({
-    username,
-    email,
-    password: hashedPsw,
-  });
-
-  const a = await user.save();
-  console.log(a);
-  return res.status(200).json({ 
-    EM: "User created successfully",
-    EC: "0", //error code
-    DT: a, //data
-  })
-  // req.session.isAuth = true;
-  // res.redirect("/login");
+  let user = await UserTestModels.findOne({ email });
+  if (user) {
+    let IsCorrectPass = checkPassword(req.body.password, user.password);
+    if (IsCorrectPass === true) {
+      let tokenJWT = await JWTaction.createJWT({
+        id: user._id,
+        email: user.email,
+      });
+      res.cookie("jwt", tokenJWT, {
+        maxAge: 60 * 60 * 1000, // set time for cookie
+        httpOnly: true, // only use from server
+      });
+      // req.session.isAuth = true;
+      req.session.loggedIn = true;
+      return res.status(200).json({
+        EM: "Login successfully", //error message
+      });
+      console.log("login success");
+    }
+  }
+  if (!user) {
+    let message = "Not found user";
+    return res.status(404).json({
+      EM: message, //error message
+      EC: "-1", //error code
+    });
+  }
 };
-
 
 const getUsersAPI = async (req, res) => {
   try {
-    let results = await User.find({}).select('-password'); // Loại bỏ trường password
+    console.log(req.cookies);
+    if (!req.cookies) {
+      return res.status(500).json({
+        EC: 1,
+        EM: "Not found cookies",
+      });
+    }
+    let results = await User.find({}).select("-password"); // Loại bỏ trường password
     return res.status(200).json({
       EC: 0,
       data: results,
@@ -137,7 +130,7 @@ const getUsersAPI = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       EC: -1,
-      message: 'Error fetching users',
+      message: "Error fetching users",
     });
   }
 };
@@ -184,7 +177,7 @@ const deleteUserAPI = async (req, res) => {
 
 const getUsersPayslipAPI = async (req, res) => {
   try {
-    let results = await User.find({}).select('-password'); // Loại bỏ trường password
+    let results = await User.find({}).select("-password"); // Loại bỏ trường password
     return res.status(200).json({
       EC: 0,
       data: results,
@@ -192,10 +185,10 @@ const getUsersPayslipAPI = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       EC: -1,
-      message: 'Error fetching users',
+      message: "Error fetching users",
     });
   }
-}
+};
 module.exports = {
   getUsersAPI,
   postCreateUserAPI,
