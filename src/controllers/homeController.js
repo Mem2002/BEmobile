@@ -74,7 +74,7 @@ const postLoginUser = async (req, res) => {
     return res.redirect(`/loginUser?message=${encodeURIComponent(message)}`);
   }
 
-  let user = await adminModels.findOne({ email });
+  let user = await userModels.findOne({ email });
   if (user) {
     let IsCorrectPass = checkPassword(req.body.password, user.password);
     if (IsCorrectPass === true) {

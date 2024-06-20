@@ -1,4 +1,4 @@
-const User = require("../models/UserM");
+const User = require("../models/User");
 const validateRegister = require("../services/registerLoginService");
 const bcrypt = require("bcrypt");
 // const UserTestModels = require("../models/AdminM");
