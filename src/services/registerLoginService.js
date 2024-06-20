@@ -1,6 +1,6 @@
 require("dotenv").config();
 const validator = require("validator");
-const User = require("../models/UserM");
+const User = require("../models/AdminM");
 // const GroupModel = require("../models/groupModel");
 // const FacultyModel = require("../models/facultyModel");
 const bcrypt = require("bcrypt");
