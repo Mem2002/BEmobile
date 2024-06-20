@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const express = require("express");
-const UserTestModels = require("../models/UserTest");
-const userModels = require("../models/registerUser");
+const adminModels = require("../models/UserM");
+const userModels = require("../models/AdminM");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const mongoose = require("mongoose");
@@ -74,7 +74,7 @@ const postLoginUser = async (req, res) => {
     return res.redirect(`/loginUser?message=${encodeURIComponent(message)}`);
   }
 
-  let user = await UserTestModels.findOne({ email });
+  let user = await adminModels.findOne({ email });
   if (user) {
     let IsCorrectPass = checkPassword(req.body.password, user.password);
     if (IsCorrectPass === true) {
@@ -182,7 +182,7 @@ const postLoginAdmin = async (req, res) => {
     return res.redirect(`/loginAdmin?message=${encodeURIComponent(message)}`);
   }
 
-  let user = await UserTestModels.findOne({ email });
+  let user = await adminModels.findOne({ email });
   if (user) {
     let IsCorrectPass = checkPassword(req.body.password, user.password);
     if (IsCorrectPass === true) {

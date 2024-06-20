@@ -1,7 +1,7 @@
-const User = require("../models/UserTest");
+const User = require("../models/AdminM");
 const validateRegister = require("../services/registerLoginService");
 const bcrypt = require("bcrypt");
-const UserTestModels = require("../models/UserTest");
+// const UserTestModels = require("../models/AdminM");
 const JWTaction = require("../middleware/jwtAction");
 
 //---------------- Login ------------------
@@ -84,7 +84,7 @@ const postlogin = async (req, res) => {
     });
   }
 
-  let user = await UserTestModels.findOne({ email });
+  let user = await User.findOne({ email });
   if (user) {
     let IsCorrectPass = checkPassword(req.body.password, user.password);
     if (IsCorrectPass === true) {

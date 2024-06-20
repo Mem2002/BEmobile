@@ -1,6 +1,6 @@
 require("dotenv").config();
 const validator = require("validator");
-const User = require("../models/UserTest");
+const User = require("../models/UserM");
 // const GroupModel = require("../models/groupModel");
 // const FacultyModel = require("../models/facultyModel");
 const bcrypt = require("bcrypt");
@@ -52,7 +52,6 @@ const isPasswordStrong = (password) => {
     numberRegex.test(password)
   );
 };
-
 
 const registerNewUser = async (req) => {
   try {
