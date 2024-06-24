@@ -3,6 +3,7 @@ const validateRegister = require("../services/registerLoginService");
 const bcrypt = require("bcrypt");
 // const UserTestModels = require("../models/AdminM");
 const JWTaction = require("../middleware/jwtAction");
+const AdminM = require("../models/AdminM");
 
 //---------------- Login ------------------
 //check lengthen of password
@@ -11,6 +12,9 @@ const isPasswordLength = (password) => {
 };
 
 const checkPassword = (inputPassword, hashPassword) => {
+  if (!inputPassword || !hashPassword) {
+    throw new Error("Input password and hash password are required");
+  }
   return bcrypt.compareSync(inputPassword, hashPassword);
 };
 
@@ -84,10 +88,17 @@ const postlogin = async (req, res) => {
     });
   }
 
-  let user = await User.findOne({ email });
+  let user = await AdminM.findOne({ email });
   if (user) {
-    let IsCorrectPass = checkPassword(req.body.password, user.password);
-    if (IsCorrectPass === true) {
+    if (!user.password) {
+      return res.status(500).json({
+        EM: "Server error: User password is missing",
+        EC: "1",
+      });
+    }
+
+    let isCorrectPass = checkPassword(req.body.password, user.password);
+    if (isCorrectPass === true) {
       let tokenJWT = await JWTaction.createJWT({
         id: user._id,
         email: user.email,
@@ -96,19 +107,20 @@ const postlogin = async (req, res) => {
         maxAge: 60 * 60 * 1000, // set time for cookie
         httpOnly: true, // only use from server
       });
-      // req.session.isAuth = true;
       req.session.loggedIn = true;
       return res.status(200).json({
-        EM: "Login successfully", //error message
+        EM: "Login successfully",
       });
-      console.log("login success");
+    } else {
+      return res.status(400).json({
+        EM: "Incorrect password",
+        EC: "1",
+      });
     }
-  }
-  if (!user) {
-    let message = "Not found user";
+  } else {
     return res.status(404).json({
-      EM: message, //error message
-      EC: "-1", //error code
+      EM: "Not found user",
+      EC: "-1",
     });
   }
 };
@@ -138,11 +150,11 @@ const postCreateUserAPI = async (req, res) => {
   // console.log(">>> req.body: ", req.body)
   let email = req.body.email;
   let name = req.body.name;
-  let city = req.body.city;
+  let phone = req.body.phone;
   let user = await User.create({
     email: email,
     name: name,
-    city: city,
+    phone: phone,
   });
   return res.status(200).json({
     EC: 0,
@@ -152,12 +164,12 @@ const postCreateUserAPI = async (req, res) => {
 const putUpdateUserAPI = async (req, res) => {
   let email = req.body.email;
   let name = req.body.name;
-  let city = req.body.city;
+  let phone = req.body.phone;
   let userId = req.body.userId;
 
   let user = await User.updateOne(
     { _id: userId },
-    { email: email, name: name, city: city }
+    { email: email, name: name, phone: phone }
   );
   return res.status(200).json({
     EC: 0,

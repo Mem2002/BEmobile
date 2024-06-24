@@ -4,9 +4,9 @@ const adminModels = require("../models/AdminM");
 const userModels = require("../models/UserM");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
-const mongoose = require("mongoose");
-const MongoDBSession = require("connect-mongodb-session")(session);
-const router = express.Router();
+// const mongoose = require("mongoose");
+// const MongoDBSession = require("connect-mongodb-session")(session);
+// const router = express.Router();
 const validateRegister = require("../services/registerLoginService");
 const JWTaction = require("../middleware/jwtAction");
 
@@ -28,19 +28,6 @@ const getHomePage = async (req, res) => {
     listUsers: results,
   });
 };
-
-const listUser = [
-  {
-    id: 1,
-    name: "chi pheo",
-    author: "ABC",
-  },
-  {
-    id: 2,
-    name: "Chiến tranh và hoa binh",
-    author: "DEF",
-  },
-];
 
 const getbooks = (req, res) => {
   res.json({ status: "Success", data: listUser });

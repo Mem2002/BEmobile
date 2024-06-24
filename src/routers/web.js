@@ -26,8 +26,8 @@ const {
   getloginUser,
 } = require("../controllers/homeController");
 const router = express.Router();
-var cookieParser = require("cookie-parser");
-router.use(cookieParser());
+// var cookieParser = require("cookie-parser");
+// router.use(cookieParser());
 
 router.use(
   session({
@@ -59,8 +59,7 @@ router.get("/books", getbooks);
 
 // router.get("/login", getlogin);
 
-
-router.get("/loginAdmin", getLoginAdmin);
+router.get("/login", getLoginAdmin);
 router.post("/loginAdmin", postLoginAdmin);
 router.get("/registeradmin", getRegisterAdmin);
 router.post("/registeradmin", postRegisterAdmin);
