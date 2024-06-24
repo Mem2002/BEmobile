@@ -128,28 +128,21 @@ const postlogin = async (req, res) => {
 const getUsersAPI = async (req, res) => {
   try {
     console.log(req.cookies);
-
-    // Kiểm tra cookie jwt
-    if (!req.cookies || !req.cookies.jwt) {
+    if (!req.cookies) {
       return res.status(401).json({
         EC: 1,
-        EM: "Not authorized. No token found",
+        EM: "Not found cookies",
       });
     }
-
-    // Tìm tất cả người dùng và loại bỏ trường password
-    let results = await User.find({}).select("-password");
-
-    // Trả về dữ liệu người dùng
+    let results = await User.find({}).select("-password"); // Loại bỏ trường password
     return res.status(200).json({
       EC: 0,
       data: results,
     });
   } catch (error) {
-    // Xử lý lỗi
     return res.status(500).json({
       EC: -1,
-      EM: "Error fetching users",
+      message: "Error fetching users",
     });
   }
 };
