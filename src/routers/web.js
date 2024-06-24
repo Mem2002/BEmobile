@@ -26,8 +26,8 @@ const {
   getloginUser,
 } = require("../controllers/homeController");
 const router = express.Router();
-// var cookieParser = require("cookie-parser");
-// router.use(cookieParser());
+var cookieParser = require("cookie-parser");
+router.use(cookieParser());
 
 router.use(
   session({
