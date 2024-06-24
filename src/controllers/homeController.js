@@ -4,20 +4,20 @@ const adminModels = require("../models/AdminM");
 const userModels = require("../models/UserM");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
-// const mongoose = require("mongoose");
-// const MongoDBSession = require("connect-mongodb-session")(session);
-// const router = express.Router();
+const mongoose = require("mongoose");
+const MongoDBSession = require("connect-mongodb-session")(session);
+const router = express.Router();
 const validateRegister = require("../services/registerLoginService");
 const JWTaction = require("../middleware/jwtAction");
 
-// router.use(
-//   session({
-//     secret: "Key that will sign cookie",
-//     resave: false,
-//     saveUninitialized: false,
-//     // store: store,
-//   })
-// );
+router.use(
+  session({
+    secret: "Key that will sign cookie",
+    resave: false,
+    saveUninitialized: false,
+    // store: store,
+  })
+);
 
 const getHomePage = async (req, res) => {
   // process data

@@ -150,11 +150,11 @@ const postCreateUserAPI = async (req, res) => {
   // console.log(">>> req.body: ", req.body)
   let email = req.body.email;
   let name = req.body.name;
-  let phone = req.body.phone;
+  let city = req.body.city;
   let user = await User.create({
     email: email,
     name: name,
-    phone: phone,
+    city: city,
   });
   return res.status(200).json({
     EC: 0,
@@ -164,12 +164,12 @@ const postCreateUserAPI = async (req, res) => {
 const putUpdateUserAPI = async (req, res) => {
   let email = req.body.email;
   let name = req.body.name;
-  let phone = req.body.phone;
+  let city = req.body.city;
   let userId = req.body.userId;
 
   let user = await User.updateOne(
     { _id: userId },
-    { email: email, name: name, phone: phone }
+    { email: email, name: name, city: city }
   );
   return res.status(200).json({
     EC: 0,
