@@ -34,7 +34,7 @@ router.use(
     secret: "Key that will sign cookie",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true },
+    cookie: { secure: false },
   })
 );
 
