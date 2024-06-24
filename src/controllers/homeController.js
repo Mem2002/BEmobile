@@ -85,10 +85,7 @@ const postLoginUser = async (req, res) => {
   }
 };
 
-const getLoginAdmin = async (req, res) => {
-  let message = req.query.message;
-  res.render("loginAdmin.ejs", { message: message });
-};
+
 
 const getRegisterUser = async (req, res) => {
   res.render("registerUser.ejs");
@@ -153,6 +150,11 @@ const getRegisterAdmin = async (req, res) => {
 
 const checkPassword = (inputPassword, hashPassword) => {
   return bcrypt.compareSync(inputPassword, hashPassword);
+};
+
+const getLoginAdmin = async (req, res) => {
+  let message = req.query.message;
+  res.render("loginAdmin.ejs", { message: message });
 };
 
 const postLoginAdmin = async (req, res) => {
