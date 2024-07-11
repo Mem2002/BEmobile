@@ -3,6 +3,7 @@ const express = require("express");
 const routerAPI = express.Router();
 // router.Method('/route', handler)
 //khai báo route
+const apiControllers = require("../controllers/apicontrollers");
 const {
   getUsersAPI,
   postCreateUserAPI,
@@ -11,7 +12,7 @@ const {
   postregister,
   postlogin,
   getUsersPayslipAPI,
-} = require("../controllers/apicontrollers");
+} = apiControllers;
 
 routerAPI.get("/users", getUsersAPI);
 routerAPI.post("/users", postCreateUserAPI);

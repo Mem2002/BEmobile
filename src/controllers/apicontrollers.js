@@ -110,9 +110,7 @@ const postlogin = async (req, res) => {
       req.session.loggedIn = true;
       return res.status(200).json({
         EM: "Login successfully",
-        EC: "0",
-        token: tokenJWT, 
-
+        
       });
     } else {
       return res.status(400).json({

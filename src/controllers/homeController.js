@@ -65,14 +65,14 @@ const postLoginUser = async (req, res) => {
   if (user) {
     let IsCorrectPass = checkPassword(req.body.password, user.password);
     if (IsCorrectPass === true) {
-      let tokenJWT = await JWTaction.createJWT({
-        id: user._id,
-        email: user.email,
-      });
-      res.cookie("jwt", tokenJWT, {
-        maxAge: 60 * 60 * 1000, // set time for cookie
-        httpOnly: true, // only use from server
-      });
+      // let tokenJWT = await JWTaction.createJWT({
+      //   id: user._id,
+      //   email: user.email,
+      // });
+      // res.cookie("jwt", tokenJWT, {
+      //   maxAge: 60 * 60 * 1000, // set time for cookie
+      //   httpOnly: true, // only use from server
+      // });
       // req.session.isAuth = true;
       req.session.loggedIn = true;
       res.redirect("/listUser");
@@ -175,14 +175,14 @@ const postLoginAdmin = async (req, res) => {
   if (user) {
     let IsCorrectPass = checkPassword(req.body.password, user.password);
     if (IsCorrectPass === true) {
-      let tokenJWT = await JWTaction.createJWT({
-        id: user._id,
-        email: user.email,
-      });
-      res.cookie("jwt", tokenJWT, {
-        maxAge: 60 * 60 * 1000, // set time for cookie
-        httpOnly: true, // only use from server
-      });
+      // let tokenJWT = await JWTaction.createJWT({
+      //   id: user._id,
+      //   email: user.email,
+      // });
+      // res.cookie("jwt", tokenJWT, {
+      //   maxAge: 60 * 60 * 1000, // set time for cookie
+      //   httpOnly: true, // only use from server
+      // });
       // req.session.isAuth = true;
       req.session.loggedIn = true;
       res.redirect("/listUser");
@@ -197,54 +197,61 @@ const postLoginAdmin = async (req, res) => {
 
 const postRegisterAdmin = async (req, res) => {
   const { username, email, password } = req.body;
+
   if (!username || !email || !password) {
     let message = "Please fill in all fields.";
-    return res.redirect(
-      `/registeradmin?message=${encodeURIComponent(message)}`
-    );
-  }
-  let isEmailExists = await validateRegister.checkUsername(req.body.username);
-  if (isEmailExists == true) {
-    // console.log("The username already exists");
-    let message = "The username already exists.";
-    return res.redirect(
-      `/registeradmin?message=${encodeURIComponent(message)}`
-    );
-  }
-  let isUsernameExists = await validateRegister.checkEmail(req.body.email);
-  if (isUsernameExists == true) {
-    // console.log("The email already exists");
-    let message = "The email already exists.";
-    return res.redirect(
-      `/registeradmin?message=${encodeURIComponent(message)}`
-    );
+    return res.redirect(`/registeradmin?message=${encodeURIComponent(message)}`);
   }
 
-  if (!validateRegister.isPasswordStrong(req.body.password)) {
-    let message =
-      "Password needs 1 uppercase letter, 1 special character, 1 digit, and minimum 8 characters.";
+  let isEmailExists = await validateRegister.checkUsername(username);
+  if (isEmailExists) {
+    let message = "The username already exists.";
+    return res.redirect(`/registeradmin?message=${encodeURIComponent(message)}`);
+  }
+
+  let isUsernameExists = await validateRegister.checkEmail(email);
+  if (isUsernameExists) {
+    let message = "The email already exists.";
+    return res.redirect(`/registeradmin?message=${encodeURIComponent(message)}`);
+  }
+
+  if (!validateRegister.isPasswordStrong(password)) {
+    let message = "Password needs 1 uppercase letter, 1 special character, 1 digit, and minimum 8 characters.";
     return res.redirect(`/register?message=${encodeURIComponent(message)}`);
   }
-  ///////////////////
 
-  let user = await UserTestModels.findOne({ email });
+  let user = await adminModels.findOne({ email });
 
   if (user) {
     return res.redirect("/register");
   }
 
   const hashedPsw = await bcrypt.hash(password, 12);
-  user = new UserTestModels({
+  user = new adminModels({
     username,
     email,
     password: hashedPsw,
   });
 
-  const a = await user.save();
-  console.log(a);
-  // req.session.isAuth = true;
-  res.redirect("/loginAdmin");
+  // Lưu admin vào cơ sở dữ liệu
+  const savedUser = await user.save();
+
+  // Tạo token JWT
+  let tokenJWT = await JWTaction.createJWT({
+    id: savedUser._id,
+    email: savedUser.email,
+  });
+
+  // Cập nhật token trong cơ sở dữ liệu
+  savedUser.token = tokenJWT;
+  await savedUser.save();
+
+  console.log(savedUser);
+
+  // Chuyển hướng đến trang đăng nhập
+  res.redirect("/login");
 };
+
 
 // const getcookie = (req, res) => {
 //   const cookies = req.cookies;

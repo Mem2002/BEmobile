@@ -9,11 +9,11 @@ const session = require('express-session');
 // const cookieParser = require('cookie-parser');
 // import {createJWT}  from "./middleware/jwtAction"
 
-
+// instance.default.withCredentials = true;
 
 const app = express();
 const port = process.env.PORT || 8888;
-const hostname = process.env.HOST_NAME;
+// const hostname = process.env.HOST_NAME;
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
@@ -28,7 +28,7 @@ app.listen(port, async () => {
     await connection();
     console.log(`App is running at ${port}`);
   } catch (err) {
-    console.log(">>> Error connect to DB", error);
+    console.log(">>> Error connect to DB", err);
     console.log(">>> Err when starting server: " + err);
   }
 });
